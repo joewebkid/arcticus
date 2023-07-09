@@ -1,0 +1,21 @@
+{
+    "name": "Акрктикус",
+    "short_name": "Акрктикус 7.0",
+    "description": "Текстовый рпг-квест про попаданцев в мир Акрктикус",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#ffffff",
+    "icons": [
+      {
+        "src": "icon.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      },
+      {
+        "src": "icon.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ]
+  }

@@ -1,0 +1,351 @@
+/* Фэнтезийные стили для элементов */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url(https://fonts.googleapis.com/css?family=Droid+Sans);
+body {
+    background-color: #f8f5ee;
+    color: #333333;
+    font-family: 'Montserrat', sans-serif;
+  }
+  
+  h1, h2, h3 {
+    color: #773333;
+  }
+  
+  p {
+  }
+  
+  .button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #985632;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  
+  ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  li {
+    margin-bottom: 5px;
+  }
+  
+  #intro {
+    text-align: center;
+    margin-top: 100px;    
+    font-family: cursive;
+  }
+  .highlight {    
+    background-color: #ffe6e63b;
+    color: #ff8108;
+  }
+  #game, #characterCreation, #intro {
+    margin: 50px auto;
+    width: 600px;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);    
+    position:relative;
+    z-index:1;
+    overflow:hidden;
+  }
+  
+  #game:before{
+    z-index:-1;
+    position:absolute;
+    left:0;
+    top:0;
+    content: url('https://masterfresok.ru/upload/iblock/367/fotooboi-cherno-belyy-les-foto.jpg');
+    opacity:0.2;
+  }
+
+  .get_item_text {
+    margin-top: 20px;
+    color: #3F51B5;
+  }
+
+  #char_select_pip {  
+    background: #000;
+    padding: 10px;
+    border-top: 2px solid #5a5f5b;
+    border-radius: 6px;
+    color: #ffffff;    
+    border: 4px solid #DE9B72;
+    content: "";
+    background: #3A3D3E;
+  }
+  #char_select_pip h3 {color: #ffffff;  }
+  #char_select_pip span {
+    color: #ffffff;
+  }
+  #char_select_pip button {
+    color: #ffffff;
+    background: #3A3D3E;
+    border: 2px solid #ffffff;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  #attributePoints {
+
+  }
+  .attr_label {
+    opacity: 0.5;
+  }
+  #attributePointsValue {
+    background: #5a5f5b;
+    padding: 5px;
+    display: inline-flex;
+    border-radius: 6px;
+    border-top: 2px solid #5a5f5b;
+  }
+  .attributeSelector {
+    margin-bottom: 10px;
+  }
+  #char_select_pip button.start_game {
+    background: #5a5f5b;
+    border: 2px solid #ffffff29;
+    border-radius: 6px;
+    padding: 5px;
+    cursor: pointer;
+  }
+  
+  #locationName {
+    color: #773333;
+    font-weight: bold;
+  }
+  
+  #inventoryList {
+    font-family: "Courier New", monospace;
+  }
+  
+  #message, #text_area_intro {
+    margin-bottom: 10px;
+    border: 4px solid #ababab40;
+    padding: 15px 12px;
+    background: #fff;
+    font-family: 'Montserrat', sans-serif;
+    text-align: justify;
+  }
+  #options {    
+	border: 4px solid #DE9B72;
+    content:"";
+    background: #3A3D3E;
+    position: relative;
+  }
+  #options .corner-decoration {
+	position: absolute;
+    width: 3em;
+    margin: -3px;
+  }
+  .corner-decoration.corner-left-top {left: 0;top: 0;}
+
+  .corner-decoration.corner-right-top {top: 0;right: 0; -webkit-transform: scaleX(-1);transform: scaleX(-1);}
+
+  .corner-decoration.corner-right-bottom {right: 0;bottom: 0; -webkit-transform: scale(-1);transform: scale(-1);}
+
+  .corner-decoration.corner-left-bottom {left: 0;bottom: 0;-webkit-transform: scaleY(-1);transform: scaleY(-1);}
+
+  #optionsList {
+    /* font-weight: bold; */
+    position: relative;
+    padding: 15px 33px;
+  }
+  #optionsList li { color: #fff;cursor: pointer;transition: all 0.5s;}
+  #optionsList li:hover { color: #aedbffc2;}
+  
+  /* Стили для локаций */
+.location {
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+}
+
+.location h2 {
+  margin-top: 0;
+}
+
+.location pre {
+  font-family: monospace;
+  white-space: pre-wrap;
+}
+/* Стили для инвентаря */
+  #inventory {
+    display: block;
+    border: 2px solid #00000017;
+    border-radius: 6px;
+    padding: 2px;
+  }
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-gap: 10px;
+  }
+  
+  .inventory-item {
+    background-color: #00000017;
+    color: #000;
+    padding: 10px;
+    text-align: center;
+    max-width: 50px;
+    cursor: pointer;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.5s;
+  }
+  .inventory-item:hover {
+    opacity: 0.5;
+  }
+  
+  .inventory-item img {
+    max-width: 100%;
+    max-height: 100%;
+  }
+  .context-menu {
+    position: absolute;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    padding: 10px;
+    z-index: 99990;
+  }
+  
+  .context-menu-item {
+    cursor: pointer;
+    padding: 5px;
+  }
+  
+  .context-menu-item:hover {
+    background-color: #f1f1f1;
+  }
+
+/* Стили для кнопки "показать инвентарь" */
+.button-show-inventory {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #ffcf9c;
+  color: #654321;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.3s;
+  position: relative;
+  margin-top: 20px;
+}
+
+.button-show-inventory:before,
+.button-show-inventory:after {
+  content: "";
+  position: absolute;
+  background-color: #fff;
+}
+
+.button-show-inventory:before {
+  top: -6px;
+  left: -6px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.button-show-inventory:after {
+  bottom: -6px;
+  right: -6px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.button-show-inventory:hover {
+  background-color: #ffac6e;
+}
+
+.button-show-inventory:active {
+  background-color: #ff9b4d;
+}
+/* Стили для вариантов ответа */
+.options {
+  margin-bottom: 20px;
+}
+
+.option {
+  margin-bottom: 10px;
+}
+
+.option button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  cursor: pointer;
+}
+
+.option button:hover {
+  background-color: #e9e9e9;
+}
+
+.option button:active {
+  background-color: #d5d5d5;
+}
+
+/* Стили для инвентаря */
+.inventory {
+  margin-bottom: 20px;
+}
+
+.inventory h2 {
+  margin-top: 0;
+}
+
+.inventory ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.inventory li {
+  margin-bottom: 5px;
+}
+
+/* Стили для характеристик персонажа */
+.stats {
+  margin-bottom: 20px;
+}
+
+.stats h2 {
+  margin-top: 0;
+}
+
+.stats table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.stats th,
+.stats td {
+  padding: 5px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+.stats th {
+  font-weight: bold;
+}
+
+/* Стили при наведении и нажатии */
+.option button:hover,
+.option button:active {
+  background-color: #c5c5c5;
+}
