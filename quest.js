@@ -45,26 +45,36 @@ function loadQuest(callback) {
   xhr.send(null);
 }
 
-// Обработчик события клика на #chatWindow
-document.getElementById("chatWindow").addEventListener("click", function () {
-  showNextMessage();
-});
+
 
 // Переменная для хранения индекса текущего сообщения
 let currentMessageIndex = 0;
 let messageIndex = 0;
+let messages = false;
 
 // ---
 function showNextMessage() {
   if (messageIndex < messages.length) {
     var message = messages[messageIndex];
     showMessage(message.author, message.content, message.avatar);
+    let lastBlock = (messageIndex+1) != messages.length
+
+
+    const typingIndicator = document.getElementById('typingIndicator');
+    typingIndicator.style.display = lastBlock ? 'flex' : 'none';
+    console.log(typingIndicator.style.display)
+
+    // Показываем опции или скрываем
+    const optionsContainer = document.getElementById('optionsList');
+    optionsContainer.style.display = lastBlock ? 'none' : 'block';
+
     messageIndex++;
   }
 }
 
 function showMessage(author, content, avatar = false) {
   var chatWindow = document.getElementById("chatWindow");
+  var chatContainer = document.getElementById("chatContainer");
   var messageContainer = document.createElement("div");
   messageContainer.className = "message";
 
@@ -72,23 +82,33 @@ function showMessage(author, content, avatar = false) {
   authorElement.className = "author";
   authorElement.innerText = author;
 
+  let avatarElement = null
+  if (author === "Система") { avatar = "system.png" }
+  if (author === "Герой") { avatar = "hero.png" }
+  if(avatar) {
+    avatarElement = document.createElement("img");
+    avatarElement.classList.add("avatar");
+    messageContainer.classList.add("left");
+    avatarElement.src = "/img/persons/"+avatar;
+  }else{
+    avatarElement = document.createElement("div");
+    avatarElement.classList.add("avatar");
+    messageContainer.classList.add("left");
+    avatarElement.innerText = author[0];
+  }
+  
   var contentElement = document.createElement("div");
   contentElement.className = "content";
   contentElement.innerText = content;
 
-  if (avatar) {
-    let avatarElement = document.createElement("img");
-    avatarElement.classList.add("avatar");
-    avatarElement.src = message.avatar;
+  if (author === "Система") {
+    messageContainer.classList.add("system");
   }
 
-  if (author === "Герой") {
-    messageContainer.classList.add("main-character");
-  }
-
-  messageContainer.appendChild(authorElement);
+  messageContainer.appendChild(avatarElement);
   messageContainer.appendChild(contentElement);
-  chatWindow.appendChild(messageContainer);
+  contentElement.appendChild(authorElement);
+  chatContainer.appendChild(messageContainer);
 
   chatWindow.scrollTop = chatWindow.scrollHeight;
 }
@@ -168,9 +188,8 @@ function executeStep(step) {
   clearMessage();
   clearOptions();
 
-  let message = step.message;
+  messages = step.messages
 
-  showMessage("Герой", message);
   if (step.messages) {
     showNextMessage();
   }
@@ -254,7 +273,7 @@ function checkRequirements(requirements) {
 // }
 
 function clearMessage() {
-  var messageContainer = document.getElementById("messageContainer");
+  var messageContainer = document.getElementById("chatContainer");
   messageContainer.innerHTML = "";
 }
 
@@ -437,8 +456,14 @@ window.addEventListener("load", function () {
   showPlayerStats();
   showInventory();
 
-  loadQuest(function (quest) {
-    executeStep(quest.steps[currentStep]);
+  // loadQuest(function (quest) {
+  //   executeStep(quest.steps[currentStep]);
+  //   console.log()
+  // });
+
+  // Обработчик события клика на #chatWindow
+  document.getElementById("chatWindow").addEventListener("click", function () {
+    showNextMessage();
   });
 
   // document.addEventListener('click', function(event) {

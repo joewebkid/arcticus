@@ -9,16 +9,6 @@ body {
 .front_of {
   position: relative;
 }
-#systemMessage {
-  position: absolute;
-  top: 0;
-  padding: 10px;
-  color: white;
-  /* background: #00000040; */
-  background: #000000a8;
-  border-bottom-right-radius: 12px;
-  font-size: 12px;
-}
 
 h1,
 h2,
@@ -68,6 +58,7 @@ li {
   width: 100%;
   max-width: 600px;
   background-color: #ffffff;
+  background-color: #100f0b;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
@@ -78,53 +69,145 @@ li {
 }
 /* CHAT WINDOW */
 #chatWindow {
-  width: 100%;
-  height: 100%;
-  cursor: pointer;
+  background-color: #F4F4F4;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  height: 400px;
+  overflow-y: scroll;
 }
 
-#messageContainer {
-  height: 80%;
-  overflow-y: scroll;
+#chatContainer {
   padding: 10px;
 }
 
 .message {
   margin-bottom: 10px;
-}
-.message.main-character {
-  text-align: right;
-  background-color: #dff0ff;
-  /* Другие стили по вашему выбору */
+  display: flex;
+  align-items: flex-start;
+  margin-top: 12px;
+  opacity: 0; /* Начальное значение прозрачности 0 */
+  animation: fadeIn 0.3s ease forwards; /* Анимация появления */
 }
 
-.author {
+@keyframes fadeIn {
+  from {
+    opacity: 0; /* Начальное значение прозрачности 0 */
+    transform: translateY(10px); /* Начальное значение смещения по вертикали */
+  }
+  to {
+    opacity: 1; /* Конечное значение прозрачности 1 */
+    transform: translateY(0); /* Конечное значение смещения по вертикали */
+  }
+}
+
+.message.right {
+  flex-direction: row-reverse;
+  align-items: flex-end;
+}
+
+.message .author {
+  position: absolute;
+  top: 0;
+  opacity: 0.5;
+}
+
+.message .avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  text-align: center;
+  background: #9E9E9E;
+  margin-right: 10px;
+  font-weight: 600;
+  color: white;
+}
+
+.message.left .avatar {
+  margin-right: 10px;
+}
+
+.message.right .avatar {
+  margin-left: 10px;
+}
+
+.message .avatar img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.message .content {
+  background-color: #FFFFFF;
+  padding: 10px;
+  border-radius: 10px;
+  flex: 1;
+  max-width: 70%;
+  position: relative;
+  padding-top: 21px;
+}
+
+.message .content p {
+  margin: 0;
+}
+
+.message.system .content {
+  font-style: italic;
+  /* background-color: #673ab726; */
+  background-color: #8c919b38;
+}
+
+/* .message.system .content {
+} */
+/*  */
+#typingIndicator {
   display: flex;
   align-items: center;
-  font-weight: bold;
-  margin-bottom: 5px;
+  justify-content: center;
+  padding-bottom: 10px;
 }
 
-.avatar {
-  width: 30px;
-  height: 30px;
+.dot {
+  width: 8px;
+  height: 8px;
+  background-color: #888;
   border-radius: 50%;
-  margin-right: 10px;
-  vertical-align: middle;
+  margin: 0 2px;
+  animation: jump 1s infinite;
 }
 
-.content {
-  margin-bottom: 10px;
+.dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes jump {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
 /*  */
-#game:before {
-  z-index: -1;
+/* .front_of:before {
+  z-index: 2;
   position: absolute;
   left: 0;
-  top: 0;
-  content: url("https://masterfresok.ru/upload/iblock/367/fotooboi-cherno-belyy-les-foto.jpg");
-  opacity: 0.2;
-}
+  top: 0;    
+  width: 100%;
+  height: 100%;
+  max-height: 560px;
+  background: url(/img/icons/batiscaf.png) no-repeat;
+  background-size: contain;
+  content: "";
+  background-color: rgba(255, 255, 255, 0.2);
+} */
 
 .get_item_text {
   margin-top: 20px;
@@ -200,36 +283,6 @@ li {
   content: "";
   background: #3a3d3e;
   position: relative;
-}
-#options .corner-decoration {
-  position: absolute;
-  width: 3em;
-  margin: -3px;
-}
-.corner-decoration.corner-left-top {
-  left: 0;
-  top: 0;
-}
-
-.corner-decoration.corner-right-top {
-  top: 0;
-  right: 0;
-  -webkit-transform: scaleX(-1);
-  transform: scaleX(-1);
-}
-
-.corner-decoration.corner-right-bottom {
-  right: 0;
-  bottom: 0;
-  -webkit-transform: scale(-1);
-  transform: scale(-1);
-}
-
-.corner-decoration.corner-left-bottom {
-  left: 0;
-  bottom: 0;
-  -webkit-transform: scaleY(-1);
-  transform: scaleY(-1);
 }
 
 #optionsList {

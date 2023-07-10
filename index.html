@@ -32,7 +32,8 @@
         кибер-бедствий. Хоть это и вызывает нервное напряжение, но главное - не потерять чувство юмора и оставаться
         крутым айти-героем!</p>
     </div>
-    <a href="#" class="button button--piyo" onclick="showCharacterCreation()">
+    <!-- <button onclick="showCharacterCreation()" class="start_game">Начать игру</button> -->
+    <a href="#" class="button button--piyo" onclick="startQuest()">
       <div class="button__wrapper">
         <span class="button__text">НАЧАТЬ</span>
       </div>
@@ -103,9 +104,7 @@
   </div>
 
 
-
-
-
+  
   <div id="game" style="display: none;">
     <div id="location" style="display: none;">
       <h2>Локация: <span id="locationName"></span></h2>
@@ -126,19 +125,19 @@
     </div>
     <!-- <div id="message"></div> -->
     <div id="chatWindow">
-      <div id="messageContainer"></div>
+      <div id="chatContainer"></div>
+      <div id="typingIndicator">
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>    
     </div>
 
     <div id="options">
-      <img class="corner-decoration corner-left-top" src="https://i.ibb.co/4mKvK3N/corner-decoration.jpg"></img>
-      <img class="corner-decoration corner-right-top" src="https://i.ibb.co/4mKvK3N/corner-decoration.jpg"></img>
-      <img class="corner-decoration corner-right-bottom" src="https://i.ibb.co/4mKvK3N/corner-decoration.jpg"></img>
-      <img class="corner-decoration corner-left-bottom" src="https://i.ibb.co/4mKvK3N/corner-decoration.jpg"></img>
       <ul id="optionsList"></ul>
     </div>
-    <button onclick="toggleInventory()" class="button-show-inventory">Показать инвентарь</button>
+    <!-- <button onclick="toggleInventory()" class="button-show-inventory">Показать инвентарь</button> -->
   </div>
-  <div id="contextMenu" class="context-menu"></div>
 
   <button id="installButton" style="display: none;">Установить</button>
   <script>
