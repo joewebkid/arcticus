@@ -1,40 +1,41 @@
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('service-worker.js')
-      .then(registration => {
-        console.log('Service Worker registered:', registration);
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("service-worker.js")
+      .then((registration) => {
+        console.log("Service Worker registered:", registration);
       })
-      .catch(error => {
-        console.error('Service Worker registration failed:', error);
+      .catch((error) => {
+        console.error("Service Worker registration failed:", error);
       });
   });
 }
 
 let player = {
-  name: 'Герой',
+  name: "Герой",
   health: 100,
-  attributePoints:15,
+  attributePoints: 15,
   strength: 5,
   agility: 5,
   intelligence: 5,
   charisma: 5,
   inventory: [],
-  currentStep:0,
+  currentStep: 0,
   encounteredCharacters: [],
 };
 
 let currentStep = 0;
 
 // Проверяем, есть ли данные в localStorage, и загружаем их
-let savedPlayerData = localStorage.getItem('playerData');
+let savedPlayerData = localStorage.getItem("playerData");
 if (savedPlayerData) {
   player = JSON.parse(savedPlayerData);
 }
 
 function loadQuest(callback) {
   let xhr = new XMLHttpRequest();
-  xhr.overrideMimeType('application/json');
-  xhr.open('GET', 'quest.json', true);
+  xhr.overrideMimeType("application/json");
+  xhr.open("GET", "quest.json", true);
   xhr.onreadystatechange = function () {
     if (xhr.readyState === 4 && xhr.status === 200) {
       let data = JSON.parse(xhr.responseText);
@@ -44,6 +45,54 @@ function loadQuest(callback) {
   xhr.send(null);
 }
 
+// Обработчик события клика на #chatWindow
+document.getElementById("chatWindow").addEventListener("click", function () {
+  showNextMessage();
+});
+
+// Переменная для хранения индекса текущего сообщения
+let currentMessageIndex = 0;
+let messageIndex = 0;
+
+// ---
+function showNextMessage() {
+  if (messageIndex < messages.length) {
+    var message = messages[messageIndex];
+    showMessage(message.author, message.content, message.avatar);
+    messageIndex++;
+  }
+}
+
+function showMessage(author, content, avatar = false) {
+  var chatWindow = document.getElementById("chatWindow");
+  var messageContainer = document.createElement("div");
+  messageContainer.className = "message";
+
+  var authorElement = document.createElement("div");
+  authorElement.className = "author";
+  authorElement.innerText = author;
+
+  var contentElement = document.createElement("div");
+  contentElement.className = "content";
+  contentElement.innerText = content;
+
+  if (avatar) {
+    let avatarElement = document.createElement("img");
+    avatarElement.classList.add("avatar");
+    avatarElement.src = message.avatar;
+  }
+
+  if (author === "Герой") {
+    messageContainer.classList.add("main-character");
+  }
+
+  messageContainer.appendChild(authorElement);
+  messageContainer.appendChild(contentElement);
+  chatWindow.appendChild(messageContainer);
+
+  chatWindow.scrollTop = chatWindow.scrollHeight;
+}
+
 function increaseAttribute(attribute) {
   if (player.attributePoints > 0) {
     player[attribute]++;
@@ -51,7 +100,7 @@ function increaseAttribute(attribute) {
     updateAttributePoints();
     updateAttributeValue(attribute);
   }
-  console.log(player)
+  console.log(player);
 }
 
 function decreaseAttribute(attribute) {
@@ -64,7 +113,8 @@ function decreaseAttribute(attribute) {
 }
 
 function updateAttributePoints() {
-  document.getElementById('attributePointsValue').innerText = player.attributePoints;
+  document.getElementById("attributePointsValue").innerText =
+    player.attributePoints;
 }
 
 function updateAttributeValue(attribute) {
@@ -72,84 +122,65 @@ function updateAttributeValue(attribute) {
 }
 
 function showCharacterCreation() {
-  let introSection = document.getElementById('intro');
-  let characterCreationSection = document.getElementById('characterCreation');
+  let introSection = document.getElementById("intro");
+  let characterCreationSection = document.getElementById("characterCreation");
 
-  introSection.style.display = 'none';
-  characterCreationSection.style.display = 'block';
+  introSection.style.display = "none";
+  characterCreationSection.style.display = "block";
 }
 
 function startQuestGame() {
-  player.attributePoints = parseInt(document.getElementById('attributePointsValue').innerText);
+  player.attributePoints = parseInt(
+    document.getElementById("attributePointsValue").innerText
+  );
 
-  player.strength = parseInt(document.getElementById('strengthValue').innerText);
-  player.agility = parseInt(document.getElementById('agilityValue').innerText);
-  player.intelligence = parseInt(document.getElementById('intelligenceValue').innerText);
-  player.charisma = parseInt(document.getElementById('charismaValue').innerText);
+  player.strength = parseInt(
+    document.getElementById("strengthValue").innerText
+  );
+  player.agility = parseInt(document.getElementById("agilityValue").innerText);
+  player.intelligence = parseInt(
+    document.getElementById("intelligenceValue").innerText
+  );
+  player.charisma = parseInt(
+    document.getElementById("charismaValue").innerText
+  );
 
   savePlayerData();
 
   loadQuest(function (quest) {
     currentStep = 0;
     showGameSection();
-    updateMessage('--- Новый квест начинается ---');
-    updateMessage(quest.story);
+
     executeStep(quest.steps[currentStep]);
   });
 }
 
 function startQuest() {
-  let characterCreationSection = document.getElementById('characterCreation');
-  let gameSection = document.getElementById('game');
-  startQuestGame()
+  let characterCreationSection = document.getElementById("characterCreation");
+  let gameSection = document.getElementById("game");
+  startQuestGame();
 
-  characterCreationSection.style.display = 'none';
-  gameSection.style.display = 'block';
+  characterCreationSection.style.display = "none";
+  gameSection.style.display = "block";
 }
 
 function executeStep(step) {
   clearMessage();
   clearOptions();
-  clearSystemMessage();
 
   let message = step.message;
-  if (step.messages) {
-    for (let i = 0; i < step.messages.length; i++) {
-      let msg = step.messages[i];
-      if (msg.item && player.inventory.includes(msg.item)) {
-        message = msg.textWithItem;
-      } else {
-        message = msg.text;
-      }
-      if (checkRequirements(msg.requirements)) {
-        message = msg.text;
-        break;
-      }
-      break;
-    }
-  }
-  // if (step.item) {
-  //   player.inventory.push(step.item);
-  //   message += `\n\n<div class="get_item_text">Получен предмет: ${step.item.name}</div>`;
-  //   savePlayerData();
-  // }
-  // if (step.location) {
-  //   message += `\n\n<div class="new_location_text">Вы находитесь в локации: ${step.location}</div>`;
-  // }
 
-  updateMessage(message);
-  if (step.systemMessage) {
-    let systemMessage = step.systemMessage;
-    updateSystemMessage(systemMessage);
+  showMessage("Герой", message);
+  if (step.messages) {
+    showNextMessage();
   }
-  showPlayerStats();
 
   if (step.character) {
     player.encounteredCharacters.push(step.character);
     savePlayerData();
   }
   if (step.location) {
-    console.log(step.location)
+    console.log(step.location);
     updateLocationImage(step.location.image);
   }
   if (step.options) {
@@ -165,29 +196,32 @@ function selectOption(optionIndex) {
       let option = step.options[optionIndex - 1];
       if (checkRequirements(option.requirements)) {
         if (option.result) {
-          updateSystemMessage(option.result);
+          showMessage("Система", option.result);
           // Дополнительные действия, связанные с результатом
           if (option.item) {
             player.inventory.push(option.item);
-            updateSystemMessage(`Получен предмет: ${option.item.name}`);
+            showMessage("Система", `Получен предмет: ${option.item.name}`);
           }
         } else {
           currentStep = option.nextStep;
           executeStep(quest.steps[currentStep]);
         }
       } else {
-        updateSystemMessage('У вас недостаточно характеристик для выбора этого варианта.');
+        showMessage(
+          "Система",
+          "У вас недостаточно характеристик для выбора этого варианта."
+        );
       }
     } else {
-      updateSystemMessage('Некорректный вариант ответа.');
+      showMessage("Система", "Некоректный вариант ответа.");
     }
   });
 }
 
 function updateLocationImage(imageUrl) {
-  let locationImage = document.getElementById('locationImage');
-  locationImage.src = "/img/locations/"+imageUrl;
-  console.log(locationImage.src)
+  let locationImage = document.getElementById("locationImage");
+  locationImage.src = "/img/locations/" + imageUrl;
+  console.log(locationImage.src);
 }
 
 function checkRequirements(requirements) {
@@ -206,77 +240,77 @@ function checkRequirements(requirements) {
   return true;
 }
 
-function updateMessage(message) {
-  let messageElement = document.getElementById('message');
-  messageElement.innerHTML += message + '\n';
-}
-function updateSystemMessage(message) {
-  let systemMessageElement = document.getElementById('systemMessage');
-  systemMessageElement.innerText = message;
-}
-function clearSystemMessage() {
-  let messageElement = document.getElementById('systemMessage');
-  messageElement.innerText = '';
-}
+// function updateMessage(message) {
+//   let messageElement = document.getElementById("message");
+//   messageElement.innerHTML += message + "\n";
+// }
+// function updateSystemMessage(message) {
+//   let systemMessageElement = document.getElementById("systemMessage");
+//   systemMessageElement.innerText = message;
+// }
+// function clearSystemMessage() {
+//   let messageElement = document.getElementById("systemMessage");
+//   messageElement.innerText = "";
+// }
 
 function clearMessage() {
-  let messageElement = document.getElementById('message');
-  messageElement.innerText = '';
+  var messageContainer = document.getElementById("messageContainer");
+  messageContainer.innerHTML = "";
 }
 
 function updateOptions(options) {
-  let optionsList = document.getElementById('optionsList');
-  optionsList.innerHTML = '';
+  let optionsList = document.getElementById("optionsList");
+  optionsList.innerHTML = "";
 
   for (let i = 0; i < options.length; i++) {
     let option = options[i];
     if (checkRequirements(option.requirements)) {
-      let optionItem = document.createElement('li');
+      let optionItem = document.createElement("li");
       optionItem.innerText = option.text;
-      optionItem.setAttribute('onclick', `selectOption(${i + 1})`);
+      optionItem.setAttribute("onclick", `selectOption(${i + 1})`);
       optionsList.appendChild(optionItem);
     }
   }
 }
 
 function clearOptions() {
-  let optionsList = document.getElementById('optionsList');
-  optionsList.innerHTML = '';
+  let optionsList = document.getElementById("optionsList");
+  optionsList.innerHTML = "";
 }
 
 function toggleInventory() {
-  let inventorySection = document.getElementById('inventory');
-  if (inventorySection.style.display === 'none') {
-    inventorySection.style.display = 'block';
+  let inventorySection = document.getElementById("inventory");
+  if (inventorySection.style.display === "none") {
+    inventorySection.style.display = "block";
     showInventory();
   } else {
-    inventorySection.style.display = 'none';
+    inventorySection.style.display = "none";
   }
 }
 
 function showInventory() {
-  let inventoryList = document.getElementById('inventoryList');
-  inventoryList.innerHTML = '';
+  let inventoryList = document.getElementById("inventoryList");
+  inventoryList.innerHTML = "";
 
   if (player.inventory.length === 0) {
-    let inventoryItem = document.createElement('li');
-    inventoryItem.innerText = 'Ваш инвентарь пуст.';
+    let inventoryItem = document.createElement("li");
+    inventoryItem.innerText = "Ваш инвентарь пуст.";
     inventoryList.appendChild(inventoryItem);
   } else {
-    let gridContainer = document.createElement('div');
-    gridContainer.classList.add('grid-container');
+    let gridContainer = document.createElement("div");
+    gridContainer.classList.add("grid-container");
 
     for (let i = 0; i < player.inventory.length; i++) {
       let item = player.inventory[i];
-      let inventoryItem = document.createElement('div');
-      inventoryItem.classList.add('inventory-item');
+      let inventoryItem = document.createElement("div");
+      inventoryItem.classList.add("inventory-item");
       inventoryItem.innerHTML = `<span class="material-symbols-outlined">${item.img_key}</span>`;
       // contextmenu
-      inventoryItem.addEventListener('contextmenu', function(event) {
+      inventoryItem.addEventListener("contextmenu", function (event) {
         event.preventDefault();
         var x = event.clientX;
         var y = event.clientY;
-        showInventoryMenu(i,{"x":x,"y":y});
+        showInventoryMenu(i, { x: x, y: y });
       });
       gridContainer.appendChild(inventoryItem);
     }
@@ -291,8 +325,10 @@ function showInventoryMenu(itemIndex, coords) {
 
   if (item.usable) {
     menuOptions.push({
-      text: 'Использовать',
-      action: function() { useItem(itemIndex); }
+      text: "Использовать",
+      action: function () {
+        useItem(itemIndex);
+      },
     });
   }
 
@@ -318,7 +354,7 @@ function showInventoryMenu(itemIndex, coords) {
 //   contextMenu.appendChild(contextMenuList);
 //   contextMenu.style.display = 'block';
 //   contextMenu.style.left = coords.x + 'px';
-//   contextMenu.style.top = coords.y + 'px';  
+//   contextMenu.style.top = coords.y + 'px';
 // }
 
 // function clearContextMenu() {
@@ -354,28 +390,28 @@ function showInventoryMenu(itemIndex, coords) {
 
 function savePlayerData() {
   player.currentStep = currentStep;
-  localStorage.setItem('playerData', JSON.stringify(player));
+  localStorage.setItem("playerData", JSON.stringify(player));
 }
 
 function showPlayerStats() {
-  let playerStats = document.getElementById('playerStats');
-  playerStats.innerHTML = '';
+  let playerStats = document.getElementById("playerStats");
+  playerStats.innerHTML = "";
 
-  let statsList = document.createElement('ul');
+  let statsList = document.createElement("ul");
 
-  let healthItem = document.createElement('li');
+  let healthItem = document.createElement("li");
   healthItem.innerText = `Здоровье: ${player.health}`;
   statsList.appendChild(healthItem);
 
-  let strengthItem = document.createElement('li');
+  let strengthItem = document.createElement("li");
   strengthItem.innerText = `Сила: ${player.strength}`;
   statsList.appendChild(strengthItem);
 
-  let agilityItem = document.createElement('li');
+  let agilityItem = document.createElement("li");
   agilityItem.innerText = `Ловкость: ${player.agility}`;
   statsList.appendChild(agilityItem);
 
-  let intelligenceItem = document.createElement('li');
+  let intelligenceItem = document.createElement("li");
   intelligenceItem.innerText = `Интеллект: ${player.intelligence}`;
   statsList.appendChild(intelligenceItem);
 
@@ -383,16 +419,16 @@ function showPlayerStats() {
 }
 
 function showGameSection() {
-  let introSection = document.getElementById('intro');
-  let gameSection = document.getElementById('game');
+  let introSection = document.getElementById("intro");
+  let gameSection = document.getElementById("game");
 
-  introSection.style.display = 'none';
-  gameSection.style.display = 'block';
+  introSection.style.display = "none";
+  gameSection.style.display = "block";
 }
 
 // Загружаем сохраненные данные при загрузке страницы
-window.addEventListener('load', function () {
-  let savedPlayerData = localStorage.getItem('playerData');
+window.addEventListener("load", function () {
+  let savedPlayerData = localStorage.getItem("playerData");
   if (savedPlayerData) {
     player = JSON.parse(savedPlayerData);
     currentStep = player.currentStep;
