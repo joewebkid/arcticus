@@ -20,6 +20,7 @@ let player = {
   charisma: 5,
   inventory: [],
   currentStep:0,
+  encounteredCharacters: [],
 };
 
 let currentStep = 0;
@@ -109,20 +110,48 @@ function startQuest() {
 function executeStep(step) {
   clearMessage();
   clearOptions();
+  clearSystemMessage();
 
   let message = step.message;
-  if (step.item) {
-    player.inventory.push(step.item);
-    message += `\n\n<div class="get_item_text">Получен предмет: ${step.item.name}</div>`;
+  if (step.messages) {
+    for (let i = 0; i < step.messages.length; i++) {
+      let msg = step.messages[i];
+      if (msg.item && player.inventory.includes(msg.item)) {
+        message = msg.textWithItem;
+      } else {
+        message = msg.text;
+      }
+      if (checkRequirements(msg.requirements)) {
+        message = msg.text;
+        break;
+      }
+      break;
+    }
+  }
+  // if (step.item) {
+  //   player.inventory.push(step.item);
+  //   message += `\n\n<div class="get_item_text">Получен предмет: ${step.item.name}</div>`;
+  //   savePlayerData();
+  // }
+  // if (step.location) {
+  //   message += `\n\n<div class="new_location_text">Вы находитесь в локации: ${step.location}</div>`;
+  // }
+
+  updateMessage(message);
+  if (step.systemMessage) {
+    let systemMessage = step.systemMessage;
+    updateSystemMessage(systemMessage);
+  }
+  showPlayerStats();
+
+  if (step.character) {
+    player.encounteredCharacters.push(step.character);
     savePlayerData();
   }
   if (step.location) {
-    message += `\n\n<div class="new_location_text">Вы находитесь в локации: ${step.location}</div>`;
+    console.log(step.location)
+    updateLocationImage(step.location.image);
   }
-
-  updateMessage(message);
-  showPlayerStats();
-  
   if (step.options) {
     updateOptions(step.options);
   }
@@ -135,8 +164,17 @@ function selectOption(optionIndex) {
     if (optionIndex >= 1 && optionIndex <= step.options.length) {
       let option = step.options[optionIndex - 1];
       if (checkRequirements(option.requirements)) {
-        currentStep = option.nextStep;
-        executeStep(quest.steps[currentStep]);
+        if (option.result) {
+          updateMessage(option.result);
+          // Дополнительные действия, связанные с результатом
+          if (option.item) {
+            player.inventory.push(option.item);
+            updateMessage(`Получен предмет: ${option.item.name}`);
+          }
+        } else {
+          currentStep = option.nextStep;
+          executeStep(quest.steps[currentStep]);
+        }
       } else {
         updateMessage('У вас недостаточно характеристик для выбора этого варианта.');
       }
@@ -144,6 +182,12 @@ function selectOption(optionIndex) {
       updateMessage('Некорректный вариант ответа.');
     }
   });
+}
+
+function updateLocationImage(imageUrl) {
+  let locationImage = document.getElementById('locationImage');
+  locationImage.src = "/img/locations/"+imageUrl;
+  console.log(locationImage.src)
 }
 
 function checkRequirements(requirements) {
@@ -165,6 +209,14 @@ function checkRequirements(requirements) {
 function updateMessage(message) {
   let messageElement = document.getElementById('message');
   messageElement.innerHTML += message + '\n';
+}
+function updateSystemMessage(message) {
+  let systemMessageElement = document.getElementById('systemMessage');
+  systemMessageElement.innerText = message;
+}
+function clearSystemMessage() {
+  let messageElement = document.getElementById('systemMessage');
+  messageElement.innerText = '';
 }
 
 function clearMessage() {
@@ -244,61 +296,61 @@ function showInventoryMenu(itemIndex, coords) {
     });
   }
 
-  showContextMenu(menuOptions, coords, item);
+  // showContextMenu(menuOptions, coords, item);
 }
 
-function showContextMenu(options, coords, item) {
-  clearContextMenu();
+// function showContextMenu(options, coords, item) {
+//   clearContextMenu();
 
-  let contextMenu = document.getElementById('contextMenu');
-  let contextMenuList = document.createElement('ul');
+//   let contextMenu = document.getElementById('contextMenu');
+//   let contextMenuList = document.createElement('ul');
 
-  for (let i = 0; i < options.length; i++) {
-    let option = options[i];
-    let menuItem = document.createElement('li');
-    menuItem.className = "context-menu-item";
-    menuItem.innerText = option.text;
-    menuItem.addEventListener('click', option.action);
-    contextMenuList.appendChild(menuItem);
-  }
+//   for (let i = 0; i < options.length; i++) {
+//     let option = options[i];
+//     let menuItem = document.createElement('li');
+//     menuItem.className = "context-menu-item";
+//     menuItem.innerText = option.text;
+//     menuItem.addEventListener('click', option.action);
+//     contextMenuList.appendChild(menuItem);
+//   }
 
-  contextMenu.innerText = item.name
-  contextMenu.appendChild(contextMenuList);
-  contextMenu.style.display = 'block';
-  contextMenu.style.left = coords.x + 'px';
-  contextMenu.style.top = coords.y + 'px';  
-}
+//   contextMenu.innerText = item.name
+//   contextMenu.appendChild(contextMenuList);
+//   contextMenu.style.display = 'block';
+//   contextMenu.style.left = coords.x + 'px';
+//   contextMenu.style.top = coords.y + 'px';  
+// }
 
-function clearContextMenu() {
-  let contextMenu = document.getElementById('contextMenu');
-  contextMenu.innerHTML = '';
-  contextMenu.style.display = 'none';
-}
+// function clearContextMenu() {
+//   let contextMenu = document.getElementById('contextMenu');
+//   contextMenu.innerHTML = '';
+//   contextMenu.style.display = 'none';
+// }
 
-function closeContextMenu() {
-  clearContextMenu();
-}
-function useItem(itemIndex) {
-  if (itemIndex >= 1 && itemIndex <= player.inventory.length) {
-    let item = player.inventory[itemIndex - 1];
-    if (item.stats) {
-      let keys = Object.keys(item.stats);
-      for (let i = 0; i < keys.length; i++) {
-        let key = keys[i];
-        player[key] += item.stats[key];
-      }
-      updateMessage(`Вы использовали предмет "${item.name}" и улучшили свои характеристики.`);
-    } else {
-      updateMessage(`Вы использовали предмет "${item.name}".`);
-    }
-    player.inventory.splice(itemIndex - 1, 1);
-    savePlayerData();
-    showInventory();
-    showPlayerStats();
-  } else {
-    updateMessage('Некорректный номер предмета.');
-  }
-}
+// function closeContextMenu() {
+//   clearContextMenu();
+// }
+// function useItem(itemIndex) {
+//   if (itemIndex >= 1 && itemIndex <= player.inventory.length) {
+//     let item = player.inventory[itemIndex - 1];
+//     if (item.stats) {
+//       let keys = Object.keys(item.stats);
+//       for (let i = 0; i < keys.length; i++) {
+//         let key = keys[i];
+//         player[key] += item.stats[key];
+//       }
+//       updateMessage(`Вы использовали предмет "${item.name}" и улучшили свои характеристики.`);
+//     } else {
+//       updateMessage(`Вы использовали предмет "${item.name}".`);
+//     }
+//     player.inventory.splice(itemIndex - 1, 1);
+//     savePlayerData();
+//     showInventory();
+//     showPlayerStats();
+//   } else {
+//     updateMessage('Некорректный номер предмета.');
+//   }
+// }
 
 function savePlayerData() {
   player.currentStep = currentStep;
@@ -353,9 +405,9 @@ window.addEventListener('load', function () {
     executeStep(quest.steps[currentStep]);
   });
 
-  document.addEventListener('click', function(event) {
-    if (!event.target.closest('#contextMenu')) {
-      closeContextMenu();
-    }
-  });
+  // document.addEventListener('click', function(event) {
+  //   if (!event.target.closest('#contextMenu')) {
+  //     closeContextMenu();
+  //   }
+  // });
 });
