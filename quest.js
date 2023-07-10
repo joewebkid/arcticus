@@ -165,21 +165,21 @@ function selectOption(optionIndex) {
       let option = step.options[optionIndex - 1];
       if (checkRequirements(option.requirements)) {
         if (option.result) {
-          updateMessage(option.result);
+          updateSystemMessage(option.result);
           // Дополнительные действия, связанные с результатом
           if (option.item) {
             player.inventory.push(option.item);
-            updateMessage(`Получен предмет: ${option.item.name}`);
+            updateSystemMessage(`Получен предмет: ${option.item.name}`);
           }
         } else {
           currentStep = option.nextStep;
           executeStep(quest.steps[currentStep]);
         }
       } else {
-        updateMessage('У вас недостаточно характеристик для выбора этого варианта.');
+        updateSystemMessage('У вас недостаточно характеристик для выбора этого варианта.');
       }
     } else {
-      updateMessage('Некорректный вариант ответа.');
+      updateSystemMessage('Некорректный вариант ответа.');
     }
   });
 }

@@ -47,7 +47,9 @@ body {
   li {
     margin-bottom: 5px;
   }
-  
+  #locationImage {
+    width: 100%;
+  }
   #intro {
     text-align: center;
     margin-top: 100px;    
@@ -59,7 +61,8 @@ body {
   }
   #game, #characterCreation, #intro {
     margin: 50px auto;
-    width: 600px;
+    width: 100%;
+    max-width: 600px;
     background-color: #ffffff;
     padding: 20px;
     border-radius: 8px;
@@ -67,6 +70,7 @@ body {
     position:relative;
     z-index:1;
     overflow:hidden;
+    box-sizing: border-box;
   }
   
   #game:before{
