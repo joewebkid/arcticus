@@ -1,10 +1,16 @@
 /* Фэнтезийные стили для элементов */
 @import url("https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Russo+One&display=swap");
 @import url(https://fonts.googleapis.com/css?family=Droid+Sans);
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
 body {
   background-color: #f8f5ee;
   color: #333333;
   font-family: "Andika", sans-serif;
+  scroll-behavior: smooth;
 }
 .front_of {
   position: relative;
@@ -55,11 +61,13 @@ li {
 #characterCreation,
 #intro {
   margin: 50px auto;
+  margin: 0px auto;
   width: 100%;
   max-width: 600px;
   background-color: #ffffff;
   background-color: #100f0b;
   padding: 20px;
+  padding: 4px;
   border-radius: 8px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   position: relative;
@@ -279,24 +287,33 @@ li {
   text-align: justify;
 }
 #options {
-  border: 4px solid #de9b72;
   content: "";
-  background: #3a3d3e;
   position: relative;
 }
 
 #optionsList {
   /* font-weight: bold; */
   position: relative;
-  padding: 15px 33px;
+  padding: 7px 17px;
+  border-top: 1px solid #dbdbdb;
+  background: #69696940;
+  opacity: 0; /* Начальное значение прозрачности 0 */
+  animation: fadeIn 0.8s ease forwards; /* Анимация появления */
 }
 #optionsList li {
-  color: #fff;
   cursor: pointer;
-  transition: all 0.5s;
+  transition: all 0.5s;    
+  margin-top: 6px;
+  padding: 7px 12px;
+  border-radius: 5px;
+  color: lightgreen;
+  background-color: #000000;
+  display: inline-block;
+  opacity: 0.8;
+  margin-right: 10px;
 }
 #optionsList li:hover {
-  color: #aedbffc2;
+  opacity: 1;
 }
 
 /* Стили для локаций */

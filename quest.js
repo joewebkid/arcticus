@@ -35,7 +35,7 @@ if (savedPlayerData) {
 function loadQuest(callback) {
   let xhr = new XMLHttpRequest();
   xhr.overrideMimeType("application/json");
-  xhr.open("GET", "quest.json", true);
+  xhr.open("GET", "quest.json?v=1", true);
   xhr.onreadystatechange = function () {
     if (xhr.readyState === 4 && xhr.status === 200) {
       let data = JSON.parse(xhr.responseText);
@@ -49,15 +49,14 @@ function loadQuest(callback) {
 
 // Переменная для хранения индекса текущего сообщения
 let currentMessageIndex = 0;
-let messageIndex = 0;
 let messages = false;
 
 // ---
 function showNextMessage() {
-  if (messageIndex < messages.length) {
-    var message = messages[messageIndex];
+  if (currentMessageIndex < messages.length) {
+    var message = messages[currentMessageIndex];
     showMessage(message.author, message.content, message.avatar);
-    let lastBlock = (messageIndex+1) != messages.length
+    let lastBlock = (currentMessageIndex+1) != messages.length
 
 
     const typingIndicator = document.getElementById('typingIndicator');
@@ -66,9 +65,19 @@ function showNextMessage() {
 
     // Показываем опции или скрываем
     const optionsContainer = document.getElementById('optionsList');
-    optionsContainer.style.display = lastBlock ? 'none' : 'block';
+    
+    if(!lastBlock) {
+      var chatWindow = document.getElementById("chatWindow");
+      setTimeout(function() {
+        optionsContainer.style.display = 'block';
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+      }, 500);
+    }else{
+      optionsContainer.style.display = 'none';
 
-    messageIndex++;
+    }
+
+    currentMessageIndex++;
   }
 }
 
@@ -110,7 +119,9 @@ function showMessage(author, content, avatar = false) {
   contentElement.appendChild(authorElement);
   chatContainer.appendChild(messageContainer);
 
-  chatWindow.scrollTop = chatWindow.scrollHeight;
+  setTimeout(function() {
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+  }, 100);
 }
 
 function increaseAttribute(attribute) {
@@ -187,10 +198,10 @@ function startQuest() {
 function executeStep(step) {
   clearMessage();
   clearOptions();
-
+  currentMessageIndex = 0
   messages = step.messages
 
-  if (step.messages) {
+  if (messages) {
     showNextMessage();
   }
 
@@ -215,7 +226,11 @@ function selectOption(optionIndex) {
       let option = step.options[optionIndex - 1];
       if (checkRequirements(option.requirements)) {
         if (option.result) {
-          showMessage("Система", option.result);
+          messages = option.result.messages
+          currentMessageIndex = 0
+          if (messages) {
+            showNextMessage();
+          }
           // Дополнительные действия, связанные с результатом
           if (option.item) {
             player.inventory.push(option.item);

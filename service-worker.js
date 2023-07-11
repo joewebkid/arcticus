@@ -5,7 +5,7 @@ self.addEventListener('install', event => {
           'index.html',
           'quest.js',
           'style.css',
-          'quest.json',
+          // 'quest.json',
           // добавьте другие ресурсы вашей игры, которые вы хотите кэшировать
         ]);
       })
