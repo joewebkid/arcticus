@@ -256,6 +256,7 @@ function executeStep(step) {
   currentMessageIndex = 0;
   currentStep = step.id;
 
+  if(!player.visitedSteps) player.visitedSteps = []
   if (!player.visitedSteps.includes(step.id)) player.visitedSteps.push(step.id);
 
   messages = step.messages;
@@ -373,6 +374,7 @@ function updateOptions(options) {
  * @returns {boolean} - Возвращает true, если опция должна быть показана, иначе false.
  */
 function shouldShowObject(object) {
+  return true
   // Проверяем, есть ли у опции свойство единоразового показа и если да, проверяем, была ли эта опция уже выбрана
   if (object.once && selectedOptions.includes(object.id)) {
     return false;
