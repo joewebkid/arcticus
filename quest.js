@@ -25,6 +25,12 @@ let player = {
 };
 
 let currentStep = 0;
+// Переменная для хранения индекса текущего сообщения
+let currentMessageIndex = 0;
+let messages = false;
+// Инициализация массива выбранных опций
+let selectedOptions = [];
+
 
 // Проверяем, есть ли данные в localStorage, и загружаем их
 let savedPlayerData = localStorage.getItem("playerData");
@@ -47,9 +53,6 @@ function loadQuest(callback) {
 
 
 
-// Переменная для хранения индекса текущего сообщения
-let currentMessageIndex = 0;
-let messages = false;
 
 // ---
 function showNextMessage() {
@@ -98,7 +101,7 @@ function showMessage(author, content, avatar = false) {
     avatarElement = document.createElement("img");
     avatarElement.classList.add("avatar");
     messageContainer.classList.add("left");
-    avatarElement.src = "/img/persons/"+avatar;
+    avatarElement.src = location.pathname+"img/persons/"+avatar;
   }else{
     avatarElement = document.createElement("div");
     avatarElement.classList.add("avatar");
@@ -195,14 +198,27 @@ function startQuest() {
   gameSection.style.display = "block";
 }
 
+//  @TODO
+// Функция для проверки, были ли выбранная опция ранее
+function hasSelectedOptions(option) {
+  if (selectedOptions.includes(option.text)) {
+    return true;
+  }
+  return false;
+}
+
 function executeStep(step) {
   clearMessage();
   clearOptions();
   currentMessageIndex = 0
   messages = step.messages
-
+//  @TODO hasSelectedOptions
   if (messages) {
     showNextMessage();
+  } 
+  if (step.item) {
+    player.inventory.push(step.item);
+    showMessage("Система", `Получен предмет: ${step.item.name}`);
   }
 
   if (step.character) {
@@ -210,7 +226,6 @@ function executeStep(step) {
     savePlayerData();
   }
   if (step.location) {
-    console.log(step.location);
     updateLocationImage(step.location.image);
   }
   if (step.options) {
@@ -224,6 +239,7 @@ function selectOption(optionIndex) {
 
     if (optionIndex >= 1 && optionIndex <= step.options.length) {
       let option = step.options[optionIndex - 1];
+//  @TODO     // selectedOptions.push(option.text);
       if (checkRequirements(option.requirements)) {
         if (option.result) {
           messages = option.result.messages
@@ -254,7 +270,7 @@ function selectOption(optionIndex) {
 
 function updateLocationImage(imageUrl) {
   let locationImage = document.getElementById("locationImage");
-  locationImage.src = "/img/locations/" + imageUrl;
+  locationImage.src = location.pathname+"img/locations/" + imageUrl;
   console.log(locationImage.src);
 }
 
@@ -300,7 +316,9 @@ function updateOptions(options) {
     let option = options[i];
     if (checkRequirements(option.requirements)) {
       let optionItem = document.createElement("li");
-      optionItem.innerText = option.text;
+      let optionText = option.text
+      if(option.img_key) { optionText = `<i class='ra ${option.img_key}'></i> ${optionText}` }
+      optionItem.innerHTML = optionText;
       optionItem.setAttribute("onclick", `selectOption(${i + 1})`);
       optionsList.appendChild(optionItem);
     }

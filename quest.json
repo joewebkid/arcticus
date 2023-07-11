@@ -99,6 +99,7 @@
       ],
       "options": [
         {
+          "img_key": "ra-shoe-prints",
           "text": "Исследуй пространство вокруг",
           "nextStep": 2
         },
@@ -170,14 +171,17 @@
       "message": "Начинаю аккуратно исследовать окружающий лес. Вижу следы на земле, указывающие на присутствие других живых существ. Что делать?",
       "options": [
         {
+          "img_key": "ra-pine-tree",
           "text": "Заберись на дерево",
-          "nextStep": 6
+          "nextStep": 3
         },
         {
+          "img_key": "ra-shoe-prints",
           "text": "Пойдем на поляну",
           "nextStep": 7
         },
         {
+          "img_key": "ra-shoe-prints",
           "text": "Пошли к ручью",
           "nextStep": 7
         }
@@ -186,11 +190,34 @@
     {
       "id": 3,
       "message": "",
-      "location": "",
+      "item": {
+        "name": "Карта"
+      },
+      "location": {
+        "image": "arch1/view.png"
+      },
+      "messages": [
+        {
+          "author": "Герой",
+          "content": "Пока лез, нашел какую-то карту в дупле."
+        },
+        {
+          "author": "Герой",
+          "content": "Сверху вижу реку."
+        },
+        {
+          "author": "Герой",
+          "content": "А рядом нет ни моста, ни переправы. Везде обрывы."
+        },
+        {
+          "author": "Герой",
+          "content": "Ну, что ж, пойдемся."
+        }
+      ],
       "options": [
         {
-          "text": "Вернуться",
-          "nextStep": 7
+          "text": "Слезай",
+          "nextStep": 2
         }
       ]
     },

@@ -1,41 +1,39 @@
-[
-    {
-      "id": 1,
-      "name": "healthPotion",
-      "description": "Зелье здоровья",
-      "img_key": "menu_book",
-      "stats": {
-        "health": 20
-      }
-    },
-    {
-      "id": 2,
-      "name": "key",
-      "description": "Ключ",
-      "img_key": "key"
-    },
-    {
-      "id": 3,
-      "name": "knowledgeBook",
-      "description": "Книга знаний",
-      "img_key": "menu_book",
-      "stats": {
-        "intelligence": 5
-      }
-    },
-    {
-      "id": 4,
-      "name": "relic",
-      "description": "Кубок огня",
-      "img_key": "rewarded_ads"
-    },
-    {
-      "id": 5,
-      "name": "sedogrivyBlade",
-      "description": "Меч роз",
-      "img_key": "sword_rose",
-      "stats": {
-        "strength": 10
-      }
+{
+  "map":{
+    "id": 0,
+    "name": "map",
+    "description": "Карта",
+    "img_key": "menu_book",
+    "callback": "mapCall"
+  },
+  "strange_key":{
+    "id": 1,
+    "name": "strange_key",
+    "description": "Странный ключ",
+    "img_key": "strange_key"
+  },
+  "book":{
+    "id": 2,
+    "name": "knowledgeBook",
+    "description": "Книга знаний",
+    "img_key": "menu_book",
+    "stats": {
+      "intelligence": 5
     }
-]
+  },
+  "relic":{
+    "id": 4,
+    "name": "relic",
+    "description": "Кубок огня",
+    "img_key": "rewarded_ads"
+  },
+  "sedogrivyBlade":{
+    "id": 5,
+    "name": "sedogrivyBlade",
+    "description": "Меч роз",
+    "img_key": "sword_rose",
+    "stats": {
+      "strength": 10
+    }
+  }
+}
