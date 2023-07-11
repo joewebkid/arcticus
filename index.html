@@ -7,11 +7,10 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/rpg-awesome/0.2.0/css/rpg-awesome.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rpg-awesome/0.2.0/css/rpg-awesome.min.css" />
   <link rel="stylesheet" type="text/css" href="style.css?v=1">
   <link rel="stylesheet" type="text/css" href="elements.css">
-  <script src="quest.js?v=1"></script>
+  <script src="quest.js?v=2"></script>
   <script>
     // ... Ваш JavaScript код ...
   </script>
@@ -19,7 +18,7 @@
 <body>
   <div id="intro">
     <h1><i class="ra ra-pine-tree"></i> Акрктикус <i class="ra ra-pine-tree"></i></h1>
-   
+
     <!-- <button onclick="showCharacterCreation()" class="start_game">Начать игру</button> -->
     <a href="#" class="button button--piyo" onclick="startQuest()">
       <div class="button__wrapper">
@@ -92,7 +91,7 @@
   </div>
 
 
-  
+
   <div id="game" style="display: none;">
     <div id="location" style="display: none;">
       <h2>Локация: <span id="locationName"></span></h2>
@@ -108,7 +107,7 @@
       <h2>Характеристики:</h2>
     </div>
     <div class="front_of">
-      <img id="locationImage" src="" alt="Локация">
+      <img id="locationImage" src="img/locations/black.png" alt="Локация">
       <div id="systemMessage"></div>
     </div>
     <!-- <div id="message"></div> -->
@@ -118,13 +117,13 @@
         <span class="dot"></span>
         <span class="dot"></span>
         <span class="dot"></span>
-      </div> 
+      </div>
       <div id="options">
         <ul id="optionsList"></ul>
-      </div>   
+      </div>
     </div>
 
-    
+
     <!-- <button onclick="toggleInventory()" class="button-show-inventory">Показать инвентарь</button> -->
   </div>
 

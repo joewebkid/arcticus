@@ -21,6 +21,7 @@ let player = {
   charisma: 5,
   inventory: [],
   currentStep: 0,
+  visitedSteps: [],
   encounteredCharacters: [],
 };
 
@@ -30,7 +31,6 @@ let currentMessageIndex = 0;
 let messages = false;
 // Инициализация массива выбранных опций
 let selectedOptions = [];
-
 
 // Проверяем, есть ли данные в localStorage, и загружаем их
 let savedPlayerData = localStorage.getItem("playerData");
@@ -51,39 +51,51 @@ function loadQuest(callback) {
   xhr.send(null);
 }
 
-
-
-
-// ---
+/**
+Отображает следующее сообщение из массива сообщений.
+Если есть еще сообщения, отображает автора, содержимое и аватар сообщения.
+Отображает индикатор печати, если есть еще блоки сообщений.
+Показывает опции, если это последний блок сообщений, иначе скрывает опции.
+*/
 function showNextMessage() {
   if (currentMessageIndex < messages.length) {
     var message = messages[currentMessageIndex];
+
+    // if (!shouldShowOption(message)) {
+    //   showNextMessage();
+    //   return;
+    // }
     showMessage(message.author, message.content, message.avatar);
-    let lastBlock = (currentMessageIndex+1) != messages.length
+    let lastBlock = currentMessageIndex + 1 != messages.length;
 
-
-    const typingIndicator = document.getElementById('typingIndicator');
-    typingIndicator.style.display = lastBlock ? 'flex' : 'none';
-    console.log(typingIndicator.style.display)
+    const typingIndicator = document.getElementById("typingIndicator");
+    typingIndicator.style.display = lastBlock ? "flex" : "none";
+    // console.log(typingIndicator.style.display);
 
     // Показываем опции или скрываем
-    const optionsContainer = document.getElementById('optionsList');
-    
-    if(!lastBlock) {
+    const optionsContainer = document.getElementById("optionsList");
+
+    if (!lastBlock) {
       var chatWindow = document.getElementById("chatWindow");
-      setTimeout(function() {
-        optionsContainer.style.display = 'block';
+      setTimeout(function () {
+        optionsContainer.style.display = "block";
         chatWindow.scrollTop = chatWindow.scrollHeight;
       }, 500);
-    }else{
-      optionsContainer.style.display = 'none';
-
+    } else {
+      optionsContainer.style.display = "none";
     }
 
     currentMessageIndex++;
   }
 }
 
+/**
+
+Отображает сообщение в окне чата.
+@param {string} author - Автор сообщения.
+@param {string} content - Содержимое сообщения.
+@param {string|boolean} [avatar=false] - Путь к изображению аватара или false, если аватар не нужен.
+*/
 function showMessage(author, content, avatar = false) {
   var chatWindow = document.getElementById("chatWindow");
   var chatContainer = document.getElementById("chatContainer");
@@ -94,21 +106,28 @@ function showMessage(author, content, avatar = false) {
   authorElement.className = "author";
   authorElement.innerText = author;
 
-  let avatarElement = null
-  if (author === "Система") { avatar = "system.png" }
-  if (author === "Герой") { avatar = "hero.png" }
-  if(avatar) {
+  let avatarElement = null;
+  if (author === "Система") {
+    avatar = "system.png";
+  }
+  if (author === "Герой") {
+    avatar = "hero.png";
+  }
+  if (avatar) {
     avatarElement = document.createElement("img");
     avatarElement.classList.add("avatar");
     messageContainer.classList.add("left");
-    avatarElement.src = location.pathname+"img/persons/"+avatar;
-  }else{
+    avatarElement.src = location.pathname + "img/persons/" + avatar;
+  } else {
     avatarElement = document.createElement("div");
     avatarElement.classList.add("avatar");
     messageContainer.classList.add("left");
     avatarElement.innerText = author[0];
   }
-  
+  if (author === "Я") {
+    messageContainer.classList.add("right");
+  }
+
   var contentElement = document.createElement("div");
   contentElement.className = "content";
   contentElement.innerText = content;
@@ -122,11 +141,15 @@ function showMessage(author, content, avatar = false) {
   contentElement.appendChild(authorElement);
   chatContainer.appendChild(messageContainer);
 
-  setTimeout(function() {
+  setTimeout(function () {
     chatWindow.scrollTop = chatWindow.scrollHeight;
   }, 100);
 }
+/**
 
+Увеличивает значение атрибута героя.
+@param {string} attribute - Название атрибута, который нужно увеличить.
+*/
 function increaseAttribute(attribute) {
   if (player.attributePoints > 0) {
     player[attribute]++;
@@ -134,9 +157,13 @@ function increaseAttribute(attribute) {
     updateAttributePoints();
     updateAttributeValue(attribute);
   }
-  console.log(player);
 }
 
+/**
+
+Уменьшает значение атрибута героя.
+@param {string} attribute - Название атрибута, который нужно уменьшить.
+*/
 function decreaseAttribute(attribute) {
   if (player[attribute] > 1) {
     player[attribute]--;
@@ -146,15 +173,28 @@ function decreaseAttribute(attribute) {
   }
 }
 
+/**
+
+Обновляет значение доступных очков атрибутов на странице.
+*/
 function updateAttributePoints() {
   document.getElementById("attributePointsValue").innerText =
     player.attributePoints;
 }
 
+/**
+
+Обновляет значение конкретного атрибута на странице.
+@param {string} attribute - Название атрибута, который нужно обновить.
+*/
 function updateAttributeValue(attribute) {
   document.getElementById(`${attribute}Value`).innerText = player[attribute];
 }
 
+/**
+
+Показывает секцию создания персонажа и скрывает вводное сообщение.
+*/
 function showCharacterCreation() {
   let introSection = document.getElementById("intro");
   let characterCreationSection = document.getElementById("characterCreation");
@@ -201,7 +241,7 @@ function startQuest() {
 //  @TODO
 // Функция для проверки, были ли выбранная опция ранее
 function hasSelectedOptions(option) {
-  if (selectedOptions.includes(option.text)) {
+  if (selectedOptions.includes(option.id)) {
     return true;
   }
   return false;
@@ -210,12 +250,16 @@ function hasSelectedOptions(option) {
 function executeStep(step) {
   clearMessage();
   clearOptions();
-  currentMessageIndex = 0
-  messages = step.messages
-//  @TODO hasSelectedOptions
+  currentMessageIndex = 0;
+
+  if (!player.visitedSteps.includes(step.id)) player.visitedSteps.push(step.id);
+
+  messages = step.messages;
+  //
+
   if (messages) {
     showNextMessage();
-  } 
+  }
   if (step.item) {
     player.inventory.push(step.item);
     showMessage("Система", `Получен предмет: ${step.item.name}`);
@@ -223,7 +267,6 @@ function executeStep(step) {
 
   if (step.character) {
     player.encounteredCharacters.push(step.character);
-    savePlayerData();
   }
   if (step.location) {
     updateLocationImage(step.location.image);
@@ -231,47 +274,19 @@ function executeStep(step) {
   if (step.options) {
     updateOptions(step.options);
   }
-}
 
-function selectOption(optionIndex) {
-  loadQuest(function (quest) {
-    let step = quest.steps[currentStep];
-
-    if (optionIndex >= 1 && optionIndex <= step.options.length) {
-      let option = step.options[optionIndex - 1];
-//  @TODO     // selectedOptions.push(option.text);
-      if (checkRequirements(option.requirements)) {
-        if (option.result) {
-          messages = option.result.messages
-          currentMessageIndex = 0
-          if (messages) {
-            showNextMessage();
-          }
-          // Дополнительные действия, связанные с результатом
-          if (option.item) {
-            player.inventory.push(option.item);
-            showMessage("Система", `Получен предмет: ${option.item.name}`);
-          }
-        } else {
-          currentStep = option.nextStep;
-          executeStep(quest.steps[currentStep]);
-        }
-      } else {
-        showMessage(
-          "Система",
-          "У вас недостаточно характеристик для выбора этого варианта."
-        );
-      }
-    } else {
-      showMessage("Система", "Некоректный вариант ответа.");
-    }
-  });
+  savePlayerData();
 }
 
 function updateLocationImage(imageUrl) {
   let locationImage = document.getElementById("locationImage");
-  locationImage.src = location.pathname+"img/locations/" + imageUrl;
-  console.log(locationImage.src);
+  if (!imageUrl) imageUrl = location.pathname + "img/locations/black.png";
+
+  locationImage.classList.add("open-animation");
+  locationImage.src = location.pathname + "img/locations/" + imageUrl;
+  setTimeout(() => {
+    locationImage.classList.remove("open-animation");
+  }, 500);
 }
 
 function checkRequirements(requirements) {
@@ -290,18 +305,38 @@ function checkRequirements(requirements) {
   return true;
 }
 
-// function updateMessage(message) {
-//   let messageElement = document.getElementById("message");
-//   messageElement.innerHTML += message + "\n";
-// }
-// function updateSystemMessage(message) {
-//   let systemMessageElement = document.getElementById("systemMessage");
-//   systemMessageElement.innerText = message;
-// }
-// function clearSystemMessage() {
-//   let messageElement = document.getElementById("systemMessage");
-//   messageElement.innerText = "";
-// }
+/**
+
+Выполняет шаг квеста.
+@param {Object} step - Объект, представляющий шаг квеста.
+*/
+function selectOption(option) {
+  loadQuest(function (quest) {
+    selectedOptions.push(option.id);
+    // checkRequirements(option.requirements)
+    if (option.nextStep) {
+      executeStep(quest.steps[option.nextStep]);
+    }
+
+    if (option.result) {
+      messages = option.result.messages;
+      currentMessageIndex = 0;
+      if (messages) {
+        showNextMessage();
+      }
+      // Дополнительные действия, связанные с результатом
+      if (option.item) {
+        player.inventory.push(option.item);
+        showMessage("Система", `Получен предмет: ${option.item.name}`);
+      }
+    }
+
+    if (option.item) {
+      player.inventory.push(option.item);
+      showMessage("Система", `Получен предмет: ${option.item.name}`);
+    }
+  });
+}
 
 function clearMessage() {
   var messageContainer = document.getElementById("chatContainer");
@@ -309,20 +344,68 @@ function clearMessage() {
 }
 
 function updateOptions(options) {
-  let optionsList = document.getElementById("optionsList");
-  optionsList.innerHTML = "";
+  const optionsContainer = document.getElementById("optionsList");
+  optionsContainer.innerHTML = ""; // Очищаем контейнер с опциями
 
-  for (let i = 0; i < options.length; i++) {
-    let option = options[i];
-    if (checkRequirements(option.requirements)) {
-      let optionItem = document.createElement("li");
-      let optionText = option.text
-      if(option.img_key) { optionText = `<i class='ra ${option.img_key}'></i> ${optionText}` }
-      optionItem.innerHTML = optionText;
-      optionItem.setAttribute("onclick", `selectOption(${i + 1})`);
-      optionsList.appendChild(optionItem);
+  options.forEach((option) => {
+    if (shouldShowOption(option)) {
+      // Проверяем, нужно ли показывать опцию
+      const optionElement = createOptionElement(option);
+      optionsContainer.appendChild(optionElement);
     }
+  });
+}
+
+/**
+ * Проверяет, должен ли объект (опция или сообщение) быть показан или скрыт на основе заданных условий.
+ *
+ * @param {Object} option - Объект опции или сообщения.
+ * @param {number} option.id - Идентификатор опции.
+ * @param {boolean} [option.once] - Флаг единоразового показа опции.
+ * @param {string} [option.showOnStep] - Идентификатор шага, при котором опция должна быть показана.
+ * @param {string} [option.hideOnStep] - Идентификатор шага, при котором опция должна быть скрыта.
+ * @param {string} [option.item] - Предмет, необходимый для показа опции.
+ * @param {Array<string>} [option.characters] - Массив персонажей, которых необходимо встретить для показа опции.
+ * @returns {boolean} - Возвращает true, если опция должна быть показана, иначе false.
+ */
+function shouldShowOption(object) {
+  // Проверяем, есть ли у опции свойство единоразового показа и если да, проверяем, была ли эта опция уже выбрана
+  if (object.once && selectedOptions.includes(object.id)) {
+    return false;
   }
+  // Проверяем, если у опции есть предмет, проверяем, есть ли этот предмет в инвентаре героя
+  if (object.item && !player.inventory.includes(object.item)) {
+    return false;
+  }
+  // Проверяем, если у опции есть персонажи, проверяем, встретил ли герой всех этих персонажей
+  if (
+    object.characters &&
+    !object.characters.every((character) =>
+      player.encounteredCharacters.includes(character)
+    )
+  ) {
+    return false;
+  }
+  // Проверяем, если у опции есть условие посещения шага, проверяем, посетил ли герой этот шаг для отображения или скрытия опции
+  if (object.showOnStep && !player.visitedSteps.includes(object.showOnStep)) {
+    return false;
+  }
+  if (object.hideOnStep && player.visitedSteps.includes(object.hideOnStep)) {
+    return false;
+  }
+  // Если все проверки пройдены, показываем опцию
+  return true;
+}
+
+function createOptionElement(option) {
+  const optionElement = document.createElement("li");
+  optionText = option.text;
+  if (option.img_key) {
+    optionText = `<i class='ra ${option.img_key}'></i> ${optionText}`;
+  }
+  optionElement.innerHTML = optionText;
+  optionElement.addEventListener("click", () => selectOption(option));
+  return optionElement;
 }
 
 function clearOptions() {
@@ -330,94 +413,61 @@ function clearOptions() {
   optionsList.innerHTML = "";
 }
 
-function toggleInventory() {
-  let inventorySection = document.getElementById("inventory");
-  if (inventorySection.style.display === "none") {
-    inventorySection.style.display = "block";
-    showInventory();
-  } else {
-    inventorySection.style.display = "none";
-  }
-}
-
-function showInventory() {
-  let inventoryList = document.getElementById("inventoryList");
-  inventoryList.innerHTML = "";
-
-  if (player.inventory.length === 0) {
-    let inventoryItem = document.createElement("li");
-    inventoryItem.innerText = "Ваш инвентарь пуст.";
-    inventoryList.appendChild(inventoryItem);
-  } else {
-    let gridContainer = document.createElement("div");
-    gridContainer.classList.add("grid-container");
-
-    for (let i = 0; i < player.inventory.length; i++) {
-      let item = player.inventory[i];
-      let inventoryItem = document.createElement("div");
-      inventoryItem.classList.add("inventory-item");
-      inventoryItem.innerHTML = `<span class="material-symbols-outlined">${item.img_key}</span>`;
-      // contextmenu
-      inventoryItem.addEventListener("contextmenu", function (event) {
-        event.preventDefault();
-        var x = event.clientX;
-        var y = event.clientY;
-        showInventoryMenu(i, { x: x, y: y });
-      });
-      gridContainer.appendChild(inventoryItem);
-    }
-
-    inventoryList.appendChild(gridContainer);
-  }
-}
-
-function showInventoryMenu(itemIndex, coords) {
-  let item = player.inventory[itemIndex];
-  let menuOptions = [];
-
-  if (item.usable) {
-    menuOptions.push({
-      text: "Использовать",
-      action: function () {
-        useItem(itemIndex);
-      },
-    });
-  }
-
-  // showContextMenu(menuOptions, coords, item);
-}
-
-// function showContextMenu(options, coords, item) {
-//   clearContextMenu();
-
-//   let contextMenu = document.getElementById('contextMenu');
-//   let contextMenuList = document.createElement('ul');
-
-//   for (let i = 0; i < options.length; i++) {
-//     let option = options[i];
-//     let menuItem = document.createElement('li');
-//     menuItem.className = "context-menu-item";
-//     menuItem.innerText = option.text;
-//     menuItem.addEventListener('click', option.action);
-//     contextMenuList.appendChild(menuItem);
+// function toggleInventory() {
+//   let inventorySection = document.getElementById("inventory");
+//   if (inventorySection.style.display === "none") {
+//     inventorySection.style.display = "block";
+//     showInventory();
+//   } else {
+//     inventorySection.style.display = "none";
 //   }
-
-//   contextMenu.innerText = item.name
-//   contextMenu.appendChild(contextMenuList);
-//   contextMenu.style.display = 'block';
-//   contextMenu.style.left = coords.x + 'px';
-//   contextMenu.style.top = coords.y + 'px';
 // }
 
-// function clearContextMenu() {
-//   let contextMenu = document.getElementById('contextMenu');
-//   contextMenu.innerHTML = '';
-//   contextMenu.style.display = 'none';
+// function showInventory() {
+//   let inventoryList = document.getElementById("inventoryList");
+//   inventoryList.innerHTML = "";
+
+//   if (player.inventory.length === 0) {
+//     let inventoryItem = document.createElement("li");
+//     inventoryItem.innerText = "Ваш инвентарь пуст.";
+//     inventoryList.appendChild(inventoryItem);
+//   } else {
+//     let gridContainer = document.createElement("div");
+//     gridContainer.classList.add("grid-container");
+
+//     for (let i = 0; i < player.inventory.length; i++) {
+//       let item = player.inventory[i];
+//       let inventoryItem = document.createElement("div");
+//       inventoryItem.classList.add("inventory-item");
+//       inventoryItem.innerHTML = `<span class="material-symbols-outlined">${item.img_key}</span>`;
+//       // contextmenu
+//       inventoryItem.addEventListener("contextmenu", function (event) {
+//         event.preventDefault();
+//         var x = event.clientX;
+//         var y = event.clientY;
+//         showInventoryMenu(i, { x: x, y: y });
+//       });
+//       gridContainer.appendChild(inventoryItem);
+//     }
+
+//     inventoryList.appendChild(gridContainer);
+//   }
 // }
 
-// function closeContextMenu() {
-//   clearContextMenu();
+// function showInventoryMenu(itemIndex, coords) {
+//   let item = player.inventory[itemIndex];
+//   let menuOptions = [];
+
+//   if (item.usable) {
+//     menuOptions.push({
+//       text: "Использовать",
+//       action: function () {
+//         useItem(itemIndex);
+//       },
+//     });
+//   }
 // }
+
 // function useItem(itemIndex) {
 //   if (itemIndex >= 1 && itemIndex <= player.inventory.length) {
 //     let item = player.inventory[itemIndex - 1];
@@ -445,30 +495,30 @@ function savePlayerData() {
   localStorage.setItem("playerData", JSON.stringify(player));
 }
 
-function showPlayerStats() {
-  let playerStats = document.getElementById("playerStats");
-  playerStats.innerHTML = "";
+// function showPlayerStats() {
+//   let playerStats = document.getElementById("playerStats");
+//   playerStats.innerHTML = "";
 
-  let statsList = document.createElement("ul");
+//   let statsList = document.createElement("ul");
 
-  let healthItem = document.createElement("li");
-  healthItem.innerText = `Здоровье: ${player.health}`;
-  statsList.appendChild(healthItem);
+//   let healthItem = document.createElement("li");
+//   healthItem.innerText = `Здоровье: ${player.health}`;
+//   statsList.appendChild(healthItem);
 
-  let strengthItem = document.createElement("li");
-  strengthItem.innerText = `Сила: ${player.strength}`;
-  statsList.appendChild(strengthItem);
+//   let strengthItem = document.createElement("li");
+//   strengthItem.innerText = `Сила: ${player.strength}`;
+//   statsList.appendChild(strengthItem);
 
-  let agilityItem = document.createElement("li");
-  agilityItem.innerText = `Ловкость: ${player.agility}`;
-  statsList.appendChild(agilityItem);
+//   let agilityItem = document.createElement("li");
+//   agilityItem.innerText = `Ловкость: ${player.agility}`;
+//   statsList.appendChild(agilityItem);
 
-  let intelligenceItem = document.createElement("li");
-  intelligenceItem.innerText = `Интеллект: ${player.intelligence}`;
-  statsList.appendChild(intelligenceItem);
+//   let intelligenceItem = document.createElement("li");
+//   intelligenceItem.innerText = `Интеллект: ${player.intelligence}`;
+//   statsList.appendChild(intelligenceItem);
 
-  playerStats.appendChild(statsList);
-}
+//   playerStats.appendChild(statsList);
+// }
 
 function showGameSection() {
   let introSection = document.getElementById("intro");
@@ -486,22 +536,11 @@ window.addEventListener("load", function () {
     currentStep = player.currentStep;
   }
 
-  showPlayerStats();
-  showInventory();
-
-  // loadQuest(function (quest) {
-  //   executeStep(quest.steps[currentStep]);
-  //   console.log()
-  // });
+  // showPlayerStats();
+  // showInventory();
 
   // Обработчик события клика на #chatWindow
   document.getElementById("chatWindow").addEventListener("click", function () {
     showNextMessage();
   });
-
-  // document.addEventListener('click', function(event) {
-  //   if (!event.target.closest('#contextMenu')) {
-  //     closeContextMenu();
-  //   }
-  // });
 });
