@@ -28,6 +28,7 @@ let player = {
 let currentStep = 0;
 // Переменная для хранения индекса текущего сообщения
 let currentMessageIndex = 0;
+// let currentOptionObject = {};
 let messages = false;
 // Инициализация массива выбранных опций
 let selectedOptions = [];
@@ -60,11 +61,13 @@ function loadQuest(callback) {
 function showNextMessage() {
   if (currentMessageIndex < messages.length) {
     var message = messages[currentMessageIndex];
+    // console.log(currentMessageIndex, messages.length);
+    if (!shouldShowObject(message)) {
+      currentMessageIndex++;
+      showNextMessage(); // Переходим к следующему сообщению
+      return;
+    }
 
-    // if (!shouldShowOption(message)) {
-    //   showNextMessage();
-    //   return;
-    // }
     showMessage(message.author, message.content, message.avatar);
     let lastBlock = currentMessageIndex + 1 != messages.length;
 
@@ -222,7 +225,7 @@ function startQuestGame() {
   savePlayerData();
 
   loadQuest(function (quest) {
-    currentStep = 0;
+    currentStep = player.currentStep || 0;
     showGameSection();
 
     executeStep(quest.steps[currentStep]);
@@ -251,6 +254,7 @@ function executeStep(step) {
   clearMessage();
   clearOptions();
   currentMessageIndex = 0;
+  currentStep = step.id;
 
   if (!player.visitedSteps.includes(step.id)) player.visitedSteps.push(step.id);
 
@@ -348,7 +352,7 @@ function updateOptions(options) {
   optionsContainer.innerHTML = ""; // Очищаем контейнер с опциями
 
   options.forEach((option) => {
-    if (shouldShowOption(option)) {
+    if (shouldShowObject(option)) {
       // Проверяем, нужно ли показывать опцию
       const optionElement = createOptionElement(option);
       optionsContainer.appendChild(optionElement);
@@ -357,18 +361,18 @@ function updateOptions(options) {
 }
 
 /**
- * Проверяет, должен ли объект (опция или сообщение) быть показан или скрыт на основе заданных условий.
+ * Проверяет, должен ли объект (опция или сообщение) быть показан или скрыт на основе объекта опции и заданных условий.
  *
- * @param {Object} option - Объект опции или сообщения.
+ * @param {Object} option - Объект опции.
  * @param {number} option.id - Идентификатор опции.
  * @param {boolean} [option.once] - Флаг единоразового показа опции.
- * @param {string} [option.showOnStep] - Идентификатор шага, при котором опция должна быть показана.
- * @param {string} [option.hideOnStep] - Идентификатор шага, при котором опция должна быть скрыта.
+ * @param {Array<string>} [option.showOnStep] - Массив идентификаторов шагов, при которых опция должна быть показана.
+ * @param {Array<string>} [option.hideOnStep] - Массив идентификаторов шагов, при которых опция должна быть скрыта.
  * @param {string} [option.item] - Предмет, необходимый для показа опции.
  * @param {Array<string>} [option.characters] - Массив персонажей, которых необходимо встретить для показа опции.
  * @returns {boolean} - Возвращает true, если опция должна быть показана, иначе false.
  */
-function shouldShowOption(object) {
+function shouldShowObject(object) {
   // Проверяем, есть ли у опции свойство единоразового показа и если да, проверяем, была ли эта опция уже выбрана
   if (object.once && selectedOptions.includes(object.id)) {
     return false;
@@ -387,10 +391,18 @@ function shouldShowOption(object) {
     return false;
   }
   // Проверяем, если у опции есть условие посещения шага, проверяем, посетил ли герой этот шаг для отображения или скрытия опции
-  if (object.showOnStep && !player.visitedSteps.includes(object.showOnStep)) {
+  if (
+    object.showOnStep &&
+    !object.showOnStep.every((step) => player.visitedSteps.includes(step))
+  ) {
     return false;
   }
-  if (object.hideOnStep && player.visitedSteps.includes(object.hideOnStep)) {
+
+  console.log(object.hideOnStep, player.visitedSteps);
+  if (
+    object.hideOnStep &&
+    !object.hideOnStep.every((step) => !player.visitedSteps.includes(step))
+  ) {
     return false;
   }
   // Если все проверки пройдены, показываем опцию

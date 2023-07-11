@@ -11,6 +11,7 @@ body {
   color: #333333;
   font-family: "Andika", sans-serif;
   scroll-behavior: smooth;
+  margin: 0;
 }
 .front_of {
   position: relative;
