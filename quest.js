@@ -547,7 +547,8 @@ window.addEventListener("load", function () {
   let savedPlayerData = localStorage.getItem("playerData");
   if (savedPlayerData) {
     player = JSON.parse(savedPlayerData);
-    currentStep = player.currentStep;
+    currentStep = 0
+    // currentStep = player.currentStep;
   }
 
   // showPlayerStats();
