@@ -39,10 +39,10 @@ if (savedPlayerData) {
   player = JSON.parse(savedPlayerData);
 }
 
-function loadQuest(callback) {
+function loadQuest(callback, stepId) {
   let xhr = new XMLHttpRequest();
   xhr.overrideMimeType("application/json");
-  xhr.open("GET", "quest.json?v=1", true);
+  xhr.open("GET", `/data/ar_${stepId}.json`, true);
   xhr.onreadystatechange = function () {
     if (xhr.readyState === 4 && xhr.status === 200) {
       let data = JSON.parse(xhr.responseText);
@@ -61,25 +61,26 @@ function loadQuest(callback) {
 function showNextMessage() {
   if (currentMessageIndex < messages.length) {
     var message = messages[currentMessageIndex];
-    // console.log(currentMessageIndex, messages.length);
+    
     if (!shouldShowObject(message)) {
       currentMessageIndex++;
       showNextMessage(); // Переходим к следующему сообщению
       return;
     }
-
+    
     showMessage(message.author, message.content, message.avatar);
-    let lastBlock = currentMessageIndex + 1 != messages.length;
+    let lastBlock = currentMessageIndex + 1 == messages.length;
 
     const typingIndicator = document.getElementById("typingIndicator");
-    typingIndicator.style.display = lastBlock ? "flex" : "none";
+    typingIndicator.style.display = lastBlock ? "none" : "flex";
     // console.log(typingIndicator.style.display);
 
     // Показываем опции или скрываем
     const optionsContainer = document.getElementById("optionsList");
 
-    if (!lastBlock) {
+    if (lastBlock) {
       var chatWindow = document.getElementById("chatWindow");
+      
       setTimeout(function () {
         optionsContainer.style.display = "block";
         chatWindow.scrollTop = chatWindow.scrollHeight;
@@ -116,6 +117,9 @@ function showMessage(author, content, avatar = false) {
   if (author === "Герой") {
     avatar = "hero.png";
   }
+  if (author === "Неизвестный голос") {
+    avatar = "unknown.png";
+  }
   if (avatar) {
     avatarElement = document.createElement("img");
     avatarElement.classList.add("avatar");
@@ -127,7 +131,7 @@ function showMessage(author, content, avatar = false) {
     messageContainer.classList.add("left");
     avatarElement.innerText = author[0];
   }
-  if (author === "Я") {
+  if (author === "Неизвестный голос") {
     messageContainer.classList.add("right");
   }
 
@@ -144,10 +148,11 @@ function showMessage(author, content, avatar = false) {
   contentElement.appendChild(authorElement);
   chatContainer.appendChild(messageContainer);
 
-  setTimeout(function () {
-    chatWindow.scrollTop = chatWindow.scrollHeight;
-  }, 100);
+  // setTimeout(function () {
+  //   chatWindow.scrollTop = chatWindow.scrollHeight;
+  // }, 100);
 }
+
 /**
 
 Увеличивает значение атрибута героя.
@@ -224,12 +229,11 @@ function startQuestGame() {
 
   savePlayerData();
 
-  loadQuest(function (quest) {
-    currentStep = player.currentStep || 0;
-    showGameSection();
+  currentStep = player.currentStep || 0;
+  showGameSection();
 
-    executeStep(quest.steps[currentStep]);
-  });
+  executeStep(currentStep);
+    
 }
 
 function startQuest() {
@@ -250,37 +254,44 @@ function hasSelectedOptions(option) {
   return false;
 }
 
-function executeStep(step) {
-  clearMessage();
-  clearOptions();
-  currentMessageIndex = 0;
-  currentStep = step.id;
+function executeStep(stepId) {
+  loadQuest(function (step) {
+    clearMessage();
+    clearOptions();
+    currentMessageIndex = 0;
+    currentStep = step.id;
 
-  if(!player.visitedSteps) player.visitedSteps = []
-  if (!player.visitedSteps.includes(step.id)) player.visitedSteps.push(step.id);
+    if(!player.visitedSteps) player.visitedSteps = []
+    if (!player.visitedSteps.includes(step.id)) player.visitedSteps.push(step.id);
 
-  messages = step.messages;
-  //
+    messages = step.messages;
+    //
 
-  if (messages) {
-    showNextMessage();
-  }
-  if (step.item) {
-    player.inventory.push(step.item);
-    showMessage("Система", `Получен предмет: ${step.item.name}`);
-  }
+    if (messages) {
+      showNextMessage();
+    }
+    if (step.item) {
+      player.inventory.push(step.item);
+      showMessage("Система", `Получен предмет: ${step.item.name}`);
+    }
 
-  if (step.character) {
-    player.encounteredCharacters.push(step.character);
-  }
-  if (step.location) {
-    updateLocationImage(step.location.image);
-  }
-  if (step.options) {
-    updateOptions(step.options);
-  }
+    if (step.character) {
+      player.encounteredCharacters.push(step.character);
+    }
+    if (step.location) {
+      updateLocationImage(step.location.image);
+    }
+    if (step.options) {
+      updateOptions(step.options);
+    }
+    
+    var chatWindow = document.getElementById("chatWindow");
+    var locationImage = document.getElementById("locationImage");
+    locationImage.style.display = currentStep?"block" : "none";
+    chatWindow.style.height = currentStep?"400px" : "100%";
 
-  savePlayerData();
+    savePlayerData();
+  }, stepId);
 }
 
 function updateLocationImage(imageUrl) {
@@ -316,31 +327,30 @@ function checkRequirements(requirements) {
 @param {Object} step - Объект, представляющий шаг квеста.
 */
 function selectOption(option) {
-  loadQuest(function (quest) {
-    selectedOptions.push(option.id);
-    // checkRequirements(option.requirements)
-    if (option.nextStep) {
-      executeStep(quest.steps[option.nextStep]);
-    }
+  selectedOptions.push(option.id);
+  // checkRequirements(option.requirements)
+  if (option.nextStep) {
+    executeStep(option.nextStep);
+  }
 
-    if (option.result) {
-      messages = option.result.messages;
-      currentMessageIndex = 0;
-      if (messages) {
-        showNextMessage();
-      }
-      // Дополнительные действия, связанные с результатом
-      if (option.item) {
-        player.inventory.push(option.item);
-        showMessage("Система", `Получен предмет: ${option.item.name}`);
-      }
+  if (option.result) {
+    messages = option.result.messages;    
+    if(option.result.options) updateOptions(option.result.options)
+    currentMessageIndex = 0;
+    if (messages) {
+      showNextMessage();
     }
-
+    // Дополнительные действия, связанные с результатом
     if (option.item) {
       player.inventory.push(option.item);
       showMessage("Система", `Получен предмет: ${option.item.name}`);
     }
-  });
+  }
+
+  if (option.item) {
+    player.inventory.push(option.item);
+    showMessage("Система", `Получен предмет: ${option.item.name}`);
+  }
 }
 
 function clearMessage() {
@@ -367,14 +377,14 @@ function updateOptions(options) {
  * @param {Object} option - Объект опции.
  * @param {number} option.id - Идентификатор опции.
  * @param {boolean} [option.once] - Флаг единоразового показа опции.
- * @param {Array<string>} [option.showOnStep] - Массив идентификаторов шагов, при которых опция должна быть показана.
- * @param {Array<string>} [option.hideOnStep] - Массив идентификаторов шагов, при которых опция должна быть скрыта.
+ * @param {Array<string>} [option.showIfStep] - Массив идентификаторов шагов, при которых опция должна быть показана.
+ * @param {Array<string>} [option.hideIfStep] - Массив идентификаторов шагов, при которых опция должна быть скрыта.
  * @param {string} [option.item] - Предмет, необходимый для показа опции.
  * @param {Array<string>} [option.characters] - Массив персонажей, которых необходимо встретить для показа опции.
  * @returns {boolean} - Возвращает true, если опция должна быть показана, иначе false.
  */
 function shouldShowObject(object) {
-  return true
+  // return true
   // Проверяем, есть ли у опции свойство единоразового показа и если да, проверяем, была ли эта опция уже выбрана
   if (object.once && selectedOptions.includes(object.id)) {
     return false;
@@ -392,18 +402,32 @@ function shouldShowObject(object) {
   ) {
     return false;
   }
+
+  // if(object.content) {
+  //   console.log(object.content)
+  //   console.log(object)
+  //   console.log(
+  //     object.hideIfStep!=undefined &&
+  //     !object.hideIfStep.every((step) => !player.visitedSteps.includes(step))
+  //   )
+  //   console.log(
+  //     object.showIfStep!=undefined &&
+  //     !object.showIfStep.every((step) => player.visitedSteps.includes(step))
+  //   )
+  //   console.log("-----------------")
+  // }
+
   // Проверяем, если у опции есть условие посещения шага, проверяем, посетил ли герой этот шаг для отображения или скрытия опции
   if (
-    object.showOnStep &&
-    !object.showOnStep.every((step) => player.visitedSteps.includes(step))
+    object.showIfStep!=undefined &&
+    object.showIfStep.every((step) => player.visitedSteps.includes(step))
   ) {
     return false;
   }
-
-  console.log(object.hideOnStep, player.visitedSteps);
+  
   if (
-    object.hideOnStep &&
-    !object.hideOnStep.every((step) => !player.visitedSteps.includes(step))
+    object.hideIfStep!=undefined &&
+    !object.hideIfStep.every((step) => !player.visitedSteps.includes(step))
   ) {
     return false;
   }
@@ -418,7 +442,10 @@ function createOptionElement(option) {
     optionText = `<i class='ra ${option.img_key}'></i> ${optionText}`;
   }
   optionElement.innerHTML = optionText;
-  optionElement.addEventListener("click", () => selectOption(option));
+  optionElement.addEventListener("click", () => {
+    if (option.result) optionElement.style.display = 'none'
+    selectOption(option)
+  });
   return optionElement;
 }
 
