@@ -10,7 +10,8 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rpg-awesome/0.2.0/css/rpg-awesome.min.css" />
   <link rel="stylesheet" type="text/css" href="style.css?v=1">
   <link rel="stylesheet" type="text/css" href="elements.css">
-  <script src="quest.js?v=4"></script>
+  <script src="./classes/document.js"></script>
+  <script type="module" src="quest.js?v=4"></script>
   <script>
     // ... Ваш JavaScript код ...
   </script>
@@ -20,7 +21,7 @@
     <h1><i class="ra ra-pine-tree"></i> Акрктикус <i class="ra ra-pine-tree"></i></h1>
 
     <!-- <button onclick="showCharacterCreation()" class="start_game">Начать игру</button> -->
-    <a href="#" class="button button--piyo" onclick="startQuest()">
+    <a href="#" class="button button--piyo" id="startButton">
       <div class="button__wrapper">
         <span class="button__text">НАЧАТЬ</span>
       </div>
@@ -93,6 +94,7 @@
 
 
   <div id="game" style="display: none;">
+    <div id="attributePointsContainer"></div>
     <div id="location" style="display: none;">
       <h2>Локация: <span id="locationName"></span></h2>
     </div>
