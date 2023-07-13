@@ -14,6 +14,7 @@ export class QuestGame {
     this.currentMessageIndex = 0;
     this.messages = [];
     this.selectedOptions = [];
+    this.options = []; 
   }
 
   /**
@@ -50,11 +51,8 @@ export class QuestGame {
   loadPlayerData() {
     let savedPlayerData = localStorage.getItem("playerData");
     if (savedPlayerData) {
-      this.player = new Player(JSON.parse(savedPlayerData).name);
-      this.player.currentStep = parseInt(
-        JSON.parse(savedPlayerData).currentStep
-      );
-      this.player.visitedSteps = JSON.parse(savedPlayerData).visitedSteps;
+      const playerData = JSON.parse(savedPlayerData);
+      this.player = new Player(playerData);
     }
   }
 
@@ -62,7 +60,7 @@ export class QuestGame {
    * Привязывает обработчики событий.
    */
   bindEventListeners() {
-    document.getElementById("chatWindow").addEventListener("click", () => {
+    document.getElementById("chatContainer").addEventListener("click", () => {
       this.showNextMessage();
     });
 
@@ -103,27 +101,9 @@ export class QuestGame {
    * Запускает игру.
    */
   startQuestGame() {
-    // this.player.attributePoints = parseInt(
-    //   document.getElementById("attributePointsValue").innerText
-    // );
-    // this.player.strength = parseInt(
-    //   document.getElementById("strengthValue").innerText
-    // );
-    // this.player.agility = parseInt(
-    //   document.getElementById("agilityValue").innerText
-    // );
-    // this.player.intelligence = parseInt(
-    //   document.getElementById("intelligenceValue").innerText
-    // );
-    // this.player.charisma = parseInt(
-    //   document.getElementById("charismaValue").innerText
-    // );
     this.loadPlayerData();
-    // this.savePlayerData();
-
     this.currentStep = this.player.currentStep || 0;
     this.showGameSection();
-
     this.executeStep(this.currentStep);
   }
 
@@ -141,44 +121,21 @@ export class QuestGame {
    * @param {number} stepId - Идентификатор шага квеста.
    */
   executeStep(stepId) {
-    this.loadQuest((step) => {
-      this.clearMessage();
-      this.clearOptions();
-      this.currentMessageIndex = 0;
-      this.currentStep = step.id;
+    this.loadQuest(stepId)
+      .then((step) => {
+        this.clearMessage();
+        this.clearOptions();
+        this.currentMessageIndex = 0;
+        this.currentStep = step.id;
 
-      if (!this.player.visitedSteps.includes(step.id)) {
-        this.player.visitedSteps.push(step.id);
-      }
-
-      this.messages = step.messages.map(
-        (message) =>
-          new Message(message.author, message.content, message.avatar)
-      );
-
-      if (this.messages) {
-        this.showNextMessage();
-      }
-
-      if (step.item) {
-        this.player.inventory.push(step.item);
-        this.showMessage("Система", `Получен предмет: ${step.item.name}`);
-      }
-
-      if (step.character) {
-        this.player.encounteredCharacters.push(step.character);
-      }
-
-      if (step.location) {
-        this.updateLocationImage(step.location.image);
-      }
-
-      if (step.options) {
-        this.updateOptions(step.options);
-      }
-
-      this.savePlayerData();
-    }, stepId);
+        this.updatePlayerState(step);
+        this.updateGameUI(step);
+        this.savePlayerData();
+        // this.showNextMessage();
+      })
+      .catch((error) => {
+        console.error("Failed to execute step:", error);
+      });
   }
 
   /**
@@ -186,16 +143,10 @@ export class QuestGame {
    * @param {Function} callback - Функция обратного вызова для обработки данных квеста.
    * @param {number} stepId - Идентификатор шага квеста.
    */
-  loadQuest(callback, stepId) {
-    fetch(`/data/ar_${stepId}.json`)
-      .then((response) => response.json())
-      .then((response) => {
-        console.log(response);
-        callback(response);
-      })
-      .catch((error) => {
-        console.error("Failed to load quest:", error);
-      });
+  loadQuest(stepId) {
+    return fetch(`/data/ar_${stepId}.json`).then((response) =>
+      response.json()
+    );
   }
 
   /**
@@ -203,44 +154,67 @@ export class QuestGame {
    */
   showNextMessage() {
     if (this.currentMessageIndex < this.messages.length) {
-      let message = this.messages[this.currentMessageIndex];
-
+      const message = this.messages[this.currentMessageIndex];
+      
       if (!this.shouldShowObject(message)) {
         this.currentMessageIndex++;
         this.showNextMessage();
         return;
       }
 
-      this.showMessage(message.author, message.content, message.avatar);
+      // const { author, content, avatar } = message;
+      message.show()
 
-      let lastBlock = this.currentMessageIndex + 1 === this.messages.length;
+      const lastBlock = this.currentMessageIndex + 1 === this.messages.length;
       const typingIndicator = document.getElementById("typingIndicator");
       typingIndicator.style.display = lastBlock ? "none" : "flex";
 
       const optionsContainer = document.getElementById("optionsList");
-
-      if (lastBlock) {
-        setTimeout(() => {
-          optionsContainer.style.display = "block";
-          this.scrollToBottom();
-        }, 500);
-      } else {
-        optionsContainer.style.display = "none";
-      }
-
+      optionsContainer.style.display = lastBlock ? "block" : "none";
+      this.scrollToBottom()
       this.currentMessageIndex++;
     }
   }
+  
+  updatePlayerState(step) {
+    this.updateVisitedSteps(step);
+    this.updatePlayerInventory(step);
+    this.updateEncounteredCharacters(step);
+  }
 
-  /**
-   * Отображает сообщение в окне чата.
-   * @param {string} author - Автор сообщения.
-   * @param {string} content - Содержимое сообщения.
-   * @param {string|boolean} [avatar=false] - Путь к изображению аватара или false, если аватар не нужен.
-   */
-  showMessage(author, content, avatar = false) {
-    const messageObject = new Message(author, content, avatar);
-    messageObject.show();
+  updateVisitedSteps(step) {
+    if (!this.player.visitedSteps.includes(step.id)) {
+      this.player.visitedSteps.push(step.id);
+    }
+  }
+
+  updatePlayerInventory(step) {
+    if (step.item) {
+      this.player.inventory.push(step.item);
+      this.showMessage("Система", `Получен предмет: ${step.item.name}`);
+    }
+  }
+
+  updateEncounteredCharacters(step) {
+    if (step.character) {
+      this.player.encounteredCharacters.push(step.character);
+    }
+  }
+
+  updateGameUI(step) {
+    if (step.location) {
+      this.updateLocationImage(step.location.image);
+    }
+
+    if (step.messages) {
+      this.messages = step.messages.map((messageData) => new Message(messageData));
+      this.showNextMessage();
+    }
+
+    if (step.options) {
+      this.options = step.options.map((optionData) => new Option(optionData));
+      this.updateOptions();
+    }
   }
 
   /**
@@ -249,12 +223,10 @@ export class QuestGame {
    */
   updateLocationImage(imageUrl) {
     const locationImage = document.getElementById("locationImage");
-    if (!imageUrl) {
-      imageUrl = location.pathname + "img/locations/black.png";
-    }
+    imageUrl = imageUrl ? `${location.pathname}img/locations/${imageUrl}` : `${location.pathname}img/locations/black.png`;
 
     locationImage.classList.add("open-animation");
-    locationImage.src = location.pathname + "img/locations/" + imageUrl;
+    locationImage.src = imageUrl;
     setTimeout(() => {
       locationImage.classList.remove("open-animation");
     }, 500);
@@ -262,13 +234,12 @@ export class QuestGame {
 
   /**
    * Обновляет список опций.
-   * @param {Array<Option>} options - Массив опций.
    */
-  updateOptions(options) {
+  updateOptions() {
     const optionsContainer = document.getElementById("optionsList");
     optionsContainer.innerHTML = "";
 
-    options.forEach((option) => {
+    this.options.forEach((option) => {
       if (this.shouldShowObject(option)) {
         const optionElement = this.createOptionElement(option);
         optionsContainer.appendChild(optionElement);
@@ -345,35 +316,38 @@ export class QuestGame {
    */
   selectOption(option) {
     this.selectedOptions.push(option.id);
-
+  
     if (option.nextStep) {
       this.executeStep(option.nextStep);
     }
-
+  
     if (option.result) {
-      this.messages = option.result.messages;
-
-      if (option.result.options) {
-        this.updateOptions(option.result.options);
+      const { messages, options, item } = option.result;
+      
+      if (options) {
+        this.options = options.map((optionData) => new Option(optionData))
+        this.updateOptions();
       }
-
+  
       this.currentMessageIndex = 0;
-
-      if (this.messages) {
+  
+      if (messages) {
+        this.messages = messages.map((messageData) => new Message(messageData));
         this.showNextMessage();
       }
-
-      if (option.item) {
-        this.player.inventory.push(option.item);
-        this.showMessage("Система", `Получен предмет: ${option.item.name}`);
+  
+      if (item) {
+        this.player.inventory.push(item);
+        this.showMessage("Система", `Получен предмет: ${item.name}`);
       }
     }
-
+  
     if (option.item) {
       this.player.inventory.push(option.item);
       this.showMessage("Система", `Получен предмет: ${option.item.name}`);
     }
   }
+  
 
   /**
    * Очищает окно чата.
@@ -414,7 +388,10 @@ export class QuestGame {
    */
   scrollToBottom() {
     const chatWindow = document.getElementById("chatWindow");
-    chatWindow.scrollTop = chatWindow.scrollHeight;
+    setTimeout(function () {
+      // optionsContainer.style.display = "block";
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+    }, 100);
   }
 
   /**

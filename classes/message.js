@@ -8,11 +8,18 @@ export class Message {
    * @param {string} content - Содержимое сообщения.
    * @param {string|boolean} [avatar=false] - Путь к изображению аватара или false, если аватар не нужен.
    */
-  constructor(author, content, avatar = false) {
-    this.author = author;
-    this.content = content;
-    this.avatar = avatar;
-  }
+  constructor(messageData) {
+    const defaultValues = {
+      author: "",
+      content: "",
+      avatar: "",
+    };
+    // console.log(messageData['author'],messageData)
+  
+    Object.entries(defaultValues).forEach(([key, defaultValue]) => {
+      this[key] = messageData?.[key] ?? defaultValue;
+    });
+  }  
 
   /**
    * Отображает сообщение в окне чата.

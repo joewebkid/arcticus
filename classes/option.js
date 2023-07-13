@@ -12,13 +12,19 @@ export class Option {
    * @param {Object} item - Предмет, связанный с опцией.
    * @param {Object} requirements - Требования для отображения опции.
    */
-  constructor(id, text, img_key, nextStep, result, item, requirements) {
-    this.id = id;
-    this.text = text;
-    this.img_key = img_key;
-    this.nextStep = nextStep;
-    this.result = result;
-    this.item = item;
-    this.requirements = requirements;
-  }
+  constructor(optionData) {
+    const defaultValues = {
+      id: null,
+      text: "",
+      img_key: "",
+      nextStep: null,
+      result: null,
+      item: null,
+      requirements: null,
+    };
+  
+    Object.entries(defaultValues).forEach(([key, defaultValue]) => {
+      this[key] = optionData?.[key] ?? defaultValue;
+    });
+  }  
 }
