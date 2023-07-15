@@ -1,0 +1,52 @@
+
+
+
+
+<div id="characterCreation" style="display: none;">
+    <div id="text_area_intro">
+      <h3>Добро пожаловать в Арктикус 7.0!</h3>
+      <p>Поздравляем с успешным воссозданием Вашей личности!</p>
+      <p><strong>Внимание!</strong></p>
+      <p>В данный момент информационная система находится в критическом состоянии!</p>
+      <p>Напоминаем, вы внесены в список ожидания доступа к информационному источнику сроком на десять минут.</p>
+      <p>Ваш номер в списке: 121042.</p>
+      <p>Напоминаем, что вскоре каждый из участников проекта получит в инвентарь книгу знаний, содержащую в себе
+        информацию общего толка о последних событиях.</p>
+      <p><strong>Внимание! В связи с перегруженностью системы канал связи прерывается!</strong></p>
+      <p><strong>ВНИМАНИЕ!</strong></p>
+      <p><strong>НЕ умирайте! НЕ умирайте! НЕ умирайте! Снова!</strong></p>
+      <p><strong>НИ в коем случае НЕ допускайте смерти персонажа до дальнейших указаний!</strong></p>
+      <p>Желаем Вам удачи!</p>
+    </div>
+    <div id="char_select_pip">
+      <h3>Настройте свои характеристики:</h3>
+      <div id="attributePoints">Свободные очки характеристик: <span id="attributePointsValue">15</span></div>
+      <div id="attributeSelectors">
+        <div class="attributeSelector">
+          <div class="attr_label">Сила:</div>
+          <button onclick="decreaseAttribute('strength')">-</button>
+          <span id="strengthValue">5</span>
+          <button onclick="increaseAttribute('strength')">+</button>
+        </div>
+        <div class="attributeSelector">
+          <div class="attr_label">Ловкость:</div>
+          <button onclick="decreaseAttribute('agility')">-</button>
+          <span id="agilityValue">5</span>
+          <button onclick="increaseAttribute('agility')">+</button>
+        </div>
+        <div class="attributeSelector">
+          <div class="attr_label">Интеллект:</div>
+          <button onclick="decreaseAttribute('intelligence')">-</button>
+          <span id="intelligenceValue">5</span>
+          <button onclick="increaseAttribute('intelligence')">+</button>
+        </div>
+        <div class="attributeSelector">
+          <div class="attr_label">Харизма:</div>
+          <button onclick="decreaseAttribute('charisma')">-</button>
+          <span id="charismaValue">5</span>
+          <button onclick="increaseAttribute('charisma')">+</button>
+        </div>
+      </div>
+      <button onclick="startQuest()" class="start_game">Начать игру</button>
+    </div>
+  </div>

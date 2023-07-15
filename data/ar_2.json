@@ -1,0 +1,50 @@
+{
+    "id": 2,
+    "location": {
+      "image": "arch1/tall_tree.png"
+    },
+    "messages": [
+      {
+        "author": "Герой",
+        "content": "Окей. Вижу высокое дерево.",
+        "hideIfStep": [3, 4]
+      },
+      {
+        "author": "Герой",
+        "content": "Вижу поляну, на ней вроде техника какая-то.",
+        "hideIfStep": [3, 4]
+      },
+      {
+        "author": "Герой",
+        "content": "Еще ручей недалеко",
+        "hideIfStep": [3, 4]
+      },
+      {
+        "author": "Герой",
+        "content": "Куда дальше?",
+        "showIfStep": [3, 4]
+      }
+    ],
+    "message": "Начинаю аккуратно исследовать окружающий лес. Вижу следы на земле, указывающие на присутствие других живых существ. Что делать?",
+    "options": [
+      {
+        "id": 7,
+        "img_key": "ra-pine-tree",
+        "text": "Заберись на дерево",
+        "nextStep": 3,
+        "hideIfStep": [3]
+      },
+      {
+        "id": 8,
+        "img_key": "ra-shoe-prints",
+        "text": "Пойдем на поляну",
+        "nextStep": 7
+      },
+      {
+        "id": 9,
+        "img_key": "ra-shoe-prints",
+        "text": "Пошли к ручью",
+        "nextStep": 7
+      }
+    ]
+  }

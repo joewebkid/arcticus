@@ -8,88 +8,49 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rpg-awesome/0.2.0/css/rpg-awesome.min.css" />
-  <link rel="stylesheet" type="text/css" href="style.css?v=1">
-  <link rel="stylesheet" type="text/css" href="elements.css">
-  <script src="./classes/document.js"></script>
-  <script type="module" src="quest.js?v=4"></script>
+  <link rel="stylesheet" type="text/css" href="style.css?v=2">
+  <link rel="stylesheet" type="text/css" href="elements.css?v=1">
+  <!-- <script src="./classes/document.js"></script> -->
+  <script type="module" src="quest.js?v=5"></script>
   <script>
     // ... Ваш JavaScript код ...
   </script>
 </head>
 <body>
   <div id="intro">
-    <h1><i class="ra ra-pine-tree"></i> Акрктикус <i class="ra ra-pine-tree"></i></h1>
+    <div id="introContainer">
+      <h1 style="font-size: 4em;">Халтрикс </h1>
 
-    <!-- <button onclick="showCharacterCreation()" class="start_game">Начать игру</button> -->
-    <a href="#" class="button button--piyo" id="startButton">
-      <div class="button__wrapper">
-        <span class="button__text">НАЧАТЬ</span>
-      </div>
-      <div class="characterBox">
-        <div class="character wakeup">
-          <div class="character__face"></div>
-        </div>
-        <div class="character wakeup">
-          <div class="character__face"></div>
-        </div>
-        <div class="character">
-          <div class="character__face"></div>
-        </div>
-      </div>
-    </a>
-  </div>
-
-
-
-
-  <div id="characterCreation" style="display: none;">
-    <div id="text_area_intro">
-      <h3>Добро пожаловать в Арктикус 7.0!</h3>
-      <p>Поздравляем с успешным воссозданием Вашей личности!</p>
-      <p><strong>Внимание!</strong></p>
-      <p>В данный момент информационная система находится в критическом состоянии!</p>
-      <p>Напоминаем, вы внесены в список ожидания доступа к информационному источнику сроком на десять минут.</p>
-      <p>Ваш номер в списке: 121042.</p>
-      <p>Напоминаем, что вскоре каждый из участников проекта получит в инвентарь книгу знаний, содержащую в себе
-        информацию общего толка о последних событиях.</p>
-      <p><strong>Внимание! В связи с перегруженностью системы канал связи прерывается!</strong></p>
-      <p><strong>ВНИМАНИЕ!</strong></p>
-      <p><strong>НЕ умирайте! НЕ умирайте! НЕ умирайте! Снова!</strong></p>
-      <p><strong>НИ в коем случае НЕ допускайте смерти персонажа до дальнейших указаний!</strong></p>
-      <p>Желаем Вам удачи!</p>
-    </div>
-    <div id="char_select_pip">
-      <h3>Настройте свои характеристики:</h3>
-      <div id="attributePoints">Свободные очки характеристик: <span id="attributePointsValue">15</span></div>
-      <div id="attributeSelectors">
-        <div class="attributeSelector">
-          <div class="attr_label">Сила:</div>
-          <button onclick="decreaseAttribute('strength')">-</button>
-          <span id="strengthValue">5</span>
-          <button onclick="increaseAttribute('strength')">+</button>
-        </div>
-        <div class="attributeSelector">
-          <div class="attr_label">Ловкость:</div>
-          <button onclick="decreaseAttribute('agility')">-</button>
-          <span id="agilityValue">5</span>
-          <button onclick="increaseAttribute('agility')">+</button>
-        </div>
-        <div class="attributeSelector">
-          <div class="attr_label">Интеллект:</div>
-          <button onclick="decreaseAttribute('intelligence')">-</button>
-          <span id="intelligenceValue">5</span>
-          <button onclick="increaseAttribute('intelligence')">+</button>
-        </div>
-        <div class="attributeSelector">
-          <div class="attr_label">Харизма:</div>
-          <button onclick="decreaseAttribute('charisma')">-</button>
-          <span id="charismaValue">5</span>
-          <button onclick="increaseAttribute('charisma')">+</button>
-        </div>
-      </div>
-      <button onclick="startQuest()" class="start_game">Начать игру</button>
+      <!-- <button onclick="showCharacterCreation()" class="start_game">Начать игру</button> --> 
+      <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+        <defs>
+            <filter id="gooey">
+                <!-- in="sourceGraphic" -->
+                <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur" />
+                <feColorMatrix in="blur" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9" result="highContrastGraphic" />
+                <feComposite in="SourceGraphic" in2="highContrastGraphic" operator="atop" />
+            </filter>
+        </defs>
+      </svg>
+      
+      <button id="startButton">
+          Начнем
+          <span class="bubbles">
+              <span class="bubble"></span>
+              <span class="bubble"></span>
+              <span class="bubble"></span>
+              <span class="bubble"></span>
+              <span class="bubble"></span>
+              <span class="bubble"></span>
+              <span class="bubble"></span>
+              <span class="bubble"></span>
+              <span class="bubble"></span>
+              <span class="bubble"></span>
+          </span>
+      </button>
     </div>
   </div>
+
 
 
 

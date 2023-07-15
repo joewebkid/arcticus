@@ -11,7 +11,7 @@ export class QuestGame {
   constructor() {
     this.player = null;
     this.currentStep = 0;
-    this.currentMessageIndex = 0;
+    this.currentMessageIndex = 4;
     this.messages = [];
     this.selectedOptions = [];
     this.options = []; 
@@ -112,7 +112,7 @@ export class QuestGame {
    */
   showGameSection() {
     document.getElementById("intro").style.display = "none";
-    document.getElementById("characterCreation").style.display = "none";
+    // document.getElementById("characterCreation").style.display = "none";
     document.getElementById("game").style.display = "block";
   }
 
@@ -190,8 +190,8 @@ export class QuestGame {
 
   updatePlayerInventory(step) {
     if (step.item) {
-      this.player.inventory.push(step.item);
-      this.showMessage("Система", `Получен предмет: ${step.item.name}`);
+      this.player.inventory.push(step.item);      
+      new Message({"author":"Система","content":`Получен предмет: ${step.item.name}`}).show()
     }
   }
 
@@ -253,6 +253,7 @@ export class QuestGame {
    * @returns {boolean} - Возвращает true, если объект должен быть показан, иначе false.
    */
   shouldShowObject(object) {
+    console.log(object)
     if (object.once && this.selectedOptions.includes(object.id)) {
       return false;
     }
@@ -272,7 +273,7 @@ export class QuestGame {
 
     if (
       object.showIfStep &&
-      !object.showIfStep.every((step) =>
+      !object.showIfStep.some((step) =>
         this.player.visitedSteps.includes(step)
       )
     ) {
@@ -338,13 +339,13 @@ export class QuestGame {
   
       if (item) {
         this.player.inventory.push(item);
-        this.showMessage("Система", `Получен предмет: ${item.name}`);
+        this.messages.push(new Message({"author":"Система","content":`Получен предмет: ${item.name}`}))
       }
     }
   
     if (option.item) {
       this.player.inventory.push(option.item);
-      this.showMessage("Система", `Получен предмет: ${option.item.name}`);
+      this.messages.push(new Message({"author":"Система","content":`Получен предмет: ${option.item.name}`}))
     }
   }
   

@@ -11,6 +11,8 @@ export class Option {
    * @param {Object} result - Результат выбора опции.
    * @param {Object} item - Предмет, связанный с опцией.
    * @param {Object} requirements - Требования для отображения опции.
+   * @param {Object} hideIfStep - Требования для отображения опции.
+   * @param {Object} showIfStep - Требования для отображения опции.
    */
   constructor(optionData) {
     const defaultValues = {
@@ -21,6 +23,8 @@ export class Option {
       result: null,
       item: null,
       requirements: null,
+      hideIfStep: null,
+      showIfStep: null,
     };
   
     Object.entries(defaultValues).forEach(([key, defaultValue]) => {

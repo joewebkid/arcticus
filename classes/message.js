@@ -7,14 +7,17 @@ export class Message {
    * @param {string} author - Автор сообщения.
    * @param {string} content - Содержимое сообщения.
    * @param {string|boolean} [avatar=false] - Путь к изображению аватара или false, если аватар не нужен.
+   * @param {Object} hideIfStep - Требования для отображения сообщения.
+   * @param {Object} showIfStep - Требования для отображения сообщения.
    */
   constructor(messageData) {
     const defaultValues = {
       author: "",
       content: "",
       avatar: "",
+      hideIfStep: null,
+      showIfStep: null,
     };
-    // console.log(messageData['author'],messageData)
   
     Object.entries(defaultValues).forEach(([key, defaultValue]) => {
       this[key] = messageData?.[key] ?? defaultValue;
