@@ -9,6 +9,8 @@ export class Message {
    * @param {string|boolean} [avatar=false] - Путь к изображению аватара или false, если аватар не нужен.
    * @param {Object} hideIfStep - Требования для отображения сообщения.
    * @param {Object} showIfStep - Требования для отображения сообщения.
+   * @param {Object} characters - Требования для отображения сообщения.
+   * @param {Object} item       - Требования для отображения сообщения.
    */
   constructor(messageData) {
     const defaultValues = {
@@ -17,8 +19,9 @@ export class Message {
       avatar: "",
       hideIfStep: null,
       showIfStep: null,
+      characters: null,
     };
-  
+    
     Object.entries(defaultValues).forEach(([key, defaultValue]) => {
       this[key] = messageData?.[key] ?? defaultValue;
     });
@@ -54,6 +57,7 @@ export class Message {
     const authorClasses = {
       "Неизвестный голос": "right",
       "Системное сообщение": "system",
+      "Автор": "authorMessage",
     };
 
     if (authorClasses.hasOwnProperty(this.author)) {

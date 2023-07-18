@@ -1,3 +1,6 @@
+
+
+
 class Document {
   constructor(selector) {
     this.elements = Array.from(document.querySelectorAll(selector));

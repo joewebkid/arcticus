@@ -144,15 +144,28 @@ export class QuestGame {
    * @param {number} stepId - Идентификатор шага квеста.
    */
   loadQuest(stepId) {
-    return fetch(`/data/ar_${stepId}.json`).then((response) =>
+    return fetch(`${location.pathname}data/ar_${stepId}.json`).then((response) =>
       response.json()
     );
+  }
+
+  typingAnimation = () => {
+    const lastBlock = this.currentMessageIndex === this.messages.length;
+    
+    const typingIndicator = document.getElementById("typingIndicator");
+    typingIndicator.style.display = lastBlock ? "none" : "flex";
+
+    const optionsContainer = document.getElementById("optionsList");
+    optionsContainer.style.display = lastBlock ? "block" : "none";
+    this.scrollToBottom()
   }
 
   /**
    * Показывает следующее сообщение из массива сообщений.
    */
   showNextMessage() {
+    this.typingAnimation()
+
     if (this.currentMessageIndex < this.messages.length) {
       const message = this.messages[this.currentMessageIndex];
       
@@ -161,17 +174,8 @@ export class QuestGame {
         this.showNextMessage();
         return;
       }
-
-      // const { author, content, avatar } = message;
+      
       message.show()
-
-      const lastBlock = this.currentMessageIndex + 1 === this.messages.length;
-      const typingIndicator = document.getElementById("typingIndicator");
-      typingIndicator.style.display = lastBlock ? "none" : "flex";
-
-      const optionsContainer = document.getElementById("optionsList");
-      optionsContainer.style.display = lastBlock ? "block" : "none";
-      this.scrollToBottom()
       this.currentMessageIndex++;
     }
   }
@@ -200,23 +204,25 @@ export class QuestGame {
       this.player.encounteredCharacters.push(step.character);
     }
   }
-
+  
   updateGameUI(step) {
-    if (step.location) {
-      this.updateLocationImage(step.location.image);
-    }
-
-    if (step.messages) {
-      this.messages = step.messages.map((messageData) => new Message(messageData));
-      this.showNextMessage();
-    }
-
-    if (step.options) {
-      this.options = step.options.map((optionData) => new Option(optionData));
-      this.updateOptions();
+    const properties = ['location', 'messages', 'options'];
+  
+    for (const property of properties) {
+      if (step[property]) {
+        if (property === 'messages') {
+          this.messages = step[property].map(messageData => new Message(messageData));
+          this.showNextMessage();
+        } else if (property === 'options') {
+          this.options = step[property].map(optionData => new Option(optionData));
+          this.updateOptions();
+        } else {
+          this.updateLocationImage(step[property].image);
+        }
+      }
     }
   }
-
+  
   /**
    * Обновляет изображение локации.
    * @param {string} imageUrl - URL изображения локации.
@@ -251,40 +257,22 @@ export class QuestGame {
    * Проверяет, должен ли объект (опция или сообщение) быть показан или скрыт на основе объекта опции и заданных условий.
    * @param {Object} object - Объект опции или сообщения.
    * @returns {boolean} - Возвращает true, если объект должен быть показан, иначе false.
+   * @TODO Перенести в класс Object от которого будут наследоваться Options и Messages
    */
   shouldShowObject(object) {
-    console.log(object)
-    if (object.once && this.selectedOptions.includes(object.id)) {
-      return false;
-    }
+    const {visitedSteps, inventory, encounteredCharacters} = this.player
+    const conditions = {
+      once:       this.selectedOptions.includes(object.id),
+      item:       inventory.includes(object.item),
+      characters: (new Set(object.characters)).hasAll(encounteredCharacters),
+      showIfStep: !(new Set(visitedSteps).hasAll(object.showIfStep)),
+      hideIfStep: new Set(object.hideIfStep).hasAny(visitedSteps),
+    };
 
-    if (object.item && !this.player.inventory.includes(object.item)) {
-      return false;
-    }
-
-    if (
-      object.characters &&
-      !object.characters.every((character) =>
-        this.player.encounteredCharacters.includes(character)
-      )
-    ) {
-      return false;
-    }
-
-    if (
-      object.showIfStep &&
-      !object.showIfStep.some((step) =>
-        this.player.visitedSteps.includes(step)
-      )
-    ) {
-      return false;
-    }
-
-    if (
-      object.hideIfStep &&
-      object.hideIfStep.some((step) => this.player.visitedSteps.includes(step))
-    ) {
-      return false;
+    for (const condition in conditions) {
+      if (object[condition] && conditions[condition]) {
+        return false;
+      }
     }
 
     return true;
@@ -320,17 +308,17 @@ export class QuestGame {
   
     if (option.nextStep) {
       this.executeStep(option.nextStep);
-    }
-  
-    if (option.result) {
-      const { messages, options, item } = option.result;
+    }else if (option.result) {
+      const { messages, options, item, image } = option.result;  
+      this.currentMessageIndex = 0;
+      
+      if (image) {
+        this.updateLocationImage(image);
+      }
       
       if (options) {
         this.options = options.map((optionData) => new Option(optionData))
-        this.updateOptions();
       }
-  
-      this.currentMessageIndex = 0;
   
       if (messages) {
         this.messages = messages.map((messageData) => new Message(messageData));
@@ -341,11 +329,7 @@ export class QuestGame {
         this.player.inventory.push(item);
         this.messages.push(new Message({"author":"Система","content":`Получен предмет: ${item.name}`}))
       }
-    }
-  
-    if (option.item) {
-      this.player.inventory.push(option.item);
-      this.messages.push(new Message({"author":"Система","content":`Получен предмет: ${option.item.name}`}))
+      this.updateOptions();
     }
   }
   
@@ -388,13 +372,14 @@ export class QuestGame {
    * Прокручивает окно чата вниз.
    */
   scrollToBottom() {
-    const chatWindow = document.getElementById("chatWindow");
     setTimeout(function () {
       // optionsContainer.style.display = "block";
+      const chatWindow = document.getElementById("chatWindow");
       chatWindow.scrollTop = chatWindow.scrollHeight;
     }, 100);
   }
 
+  // Под удаление или перенос
   /**
    * Обрабатывает клик по атрибуту.
    * @param {Event} event - Событие клика.
