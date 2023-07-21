@@ -1,5 +1,5 @@
 /* Фэнтезийные стили для элементов */
-@import url("https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Caveat&family=Russo+One&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=MedievalSharp&family=Caveat&family=Russo+One&display=swap");
 @import url(https://fonts.googleapis.com/css?family=Droid+Sans);
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -34,7 +34,7 @@ h1,
 h2,
 h3 {
   color: #00FF80;
-  font-family: 'Caveat', cursive;
+  font-family: 'MedievalSharp', cursive;
 }
 
 p {
@@ -68,6 +68,20 @@ li {
 #intro {
   text-align: center;
   margin-top: 100px;
+  position: relative;
+}
+#intro::after {
+  content: '';
+  background: url(img/system/689.png);
+  filter: invert(1);
+  background-size: 20px;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  opacity: 0.2;
+  z-index: -1;
 }
 .highlight {
   background-color: #ffe6e63b;
