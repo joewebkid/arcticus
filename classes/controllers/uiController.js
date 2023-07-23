@@ -27,27 +27,16 @@ export class UiController {
     showMessage(message) {
       const msg = new Message(message.author, message.content, message.avatar);
       msg.show();
-    }
-  
+    }  
+    
+    /**
+     * Обновляет список опций.
+     */
     updateOptions(options) {
       this.optionsListElement.innerHTML = "";
       options.forEach((option) => {
         const optionElement = this.createOptionElement(option);
         this.optionsListElement.appendChild(optionElement);
-      });
-    }
-    /**
-     * Обновляет список опций.
-     */
-    updateOptions() {
-      const optionsContainer = document.getElementById("optionsList");
-      optionsContainer.innerHTML = "";
-  
-      this.options.forEach((option) => {
-        if (this.shouldShowObject(option)) {
-          const optionElement = this.createOptionElement(option);
-          optionsContainer.appendChild(optionElement);
-        }
       });
     }
   
@@ -86,7 +75,12 @@ export class UiController {
             this.chatContainerElement.scrollTop = this.chatContainerElement.scrollHeight;
         }, 100);
     }
-  
+
+    /**
+    * Создает элемент опции.
+    * @param {Option} option - Объект опции.
+    * @returns {HTMLElement} - Элемент опции.
+    */
     createOptionElement(option) {
       const optionElement = document.createElement("li");
       let optionText = option.text;
@@ -98,7 +92,7 @@ export class UiController {
         this.selectOption(option);
       });
       return optionElement;
-    }
+    }  
   
     createInventoryItemElement(item) {
       const itemElement = document.createElement("div");
