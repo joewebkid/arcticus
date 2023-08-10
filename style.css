@@ -29,7 +29,6 @@ body {
 .front_of {
   position: relative;
 }
-
 h1,
 h2,
 h3 {
@@ -125,11 +124,23 @@ li {
   height: 49vh;
   overflow-y: scroll;
 }
+#chatWindow::before {
+  background: url(https://img.freepik.com/free-vector/old-paper-texture_1048-3717.jpg?w=826&t=st=1690405877~exp=1690406477~hmac=980ccfd…);
+  content: '';
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  opacity: 0.2;
+  z-index: 0;
+  max-width: 467px;
+}
 
 #chatContainer {
   padding: 10px;    
   min-height: 70%;
   box-sizing: border-box;
+  position: relative;
+  z-index: 1;
 }
 
 .message {

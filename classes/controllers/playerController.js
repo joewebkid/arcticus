@@ -1,3 +1,4 @@
+import { Player } from "../player.js";
 // playerController.js
 
 export class PlayerController {
@@ -12,21 +13,25 @@ export class PlayerController {
   
     loadPlayer() {
       // Загрузить данные игрока из хранилища
+      let savedPlayerData = localStorage.getItem("playerData");
+      if (savedPlayerData) {
+        const playerData = JSON.parse(savedPlayerData);
+        this.player = new Player(playerData);
+      }
     }
   
     savePlayer() {
-      // Сохранить данные игрока в хранилище
+      // Сохранить данные игрока в хранилище      
+      localStorage.setItem("playerData", JSON.stringify(this.player));
     }
   
     increaseStat(stat) {
-      // Увеличить стату игрока
-  
+      // Увеличить стату игрока  
       this.player.increaseStat(stat);
     }
   
     addItemToInventory(item) {
-      // Добавить предмет в инвентарь
-      
+      // Добавить предмет в инвентарь      
       this.player.inventory.push(item);
     }
   

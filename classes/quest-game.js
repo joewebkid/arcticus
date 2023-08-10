@@ -46,27 +46,12 @@ export class QuestGame {
   }
 
   /**
-   * Загружает данные игрока.
-   */
-  loadPlayerData() {
-    let savedPlayerData = localStorage.getItem("playerData");
-    if (savedPlayerData) {
-      const playerData = JSON.parse(savedPlayerData);
-      this.player = new Player(playerData);
-    }
-  }
-
-  /**
    * Привязывает обработчики событий.
    */
   bindEventListeners() {
-    document.getElementById("chatContainer").addEventListener("click", () => {
-      this.showNextMessage();
-    });
+    document.getElementById("chatContainer").addEventListener("click", () => { this.showNextMessage(); });
 
-    document.getElementById("startButton").addEventListener("click", () => {
-      this.startQuestGame();
-    });
+    document.getElementById("startButton").addEventListener("click", () => { this.startQuestGame(); });
 
     document
       .getElementById("attributePointsContainer")
@@ -101,7 +86,6 @@ export class QuestGame {
    * Запускает игру.
    */
   startQuestGame() {
-    this.loadPlayerData();
     this.currentStep = this.player.currentStep || 0;
     this.showGameSection();
     this.executeStep(this.currentStep);
@@ -130,7 +114,9 @@ export class QuestGame {
 
         this.updatePlayerState(step);
         this.updateGameUI(step);
-        this.savePlayerData();
+        this.player.save()
+
+        // this.savePlayerData();
         // this.showNextMessage();
       })
       .catch((error) => {
@@ -193,6 +179,7 @@ export class QuestGame {
   }
 
   updatePlayerInventory(step) {
+    console.log(step)
     if (step.item) {
       this.player.inventory.push(step.item);      
       new Message({"author":"Система","content":`Получен предмет: ${step.item.name}`}).show()
@@ -284,14 +271,7 @@ export class QuestGame {
    * @returns {HTMLElement} - Элемент опции.
    */
   createOptionElement(option) {
-    const optionElement = document.createElement("li");
-    let optionText = option.text;
-
-    if (option.img_key) {
-      optionText = `<i class='ra ${option.img_key}'></i> ${optionText}`;
-    }
-
-    optionElement.innerHTML = optionText;
+    let optionElement = option.createOptionElement()
     optionElement.addEventListener("click", () => {
       this.selectOption(option);
     });
@@ -351,21 +331,11 @@ export class QuestGame {
   }
 
   /**
-   * Сохраняет данные игрока.
-   */
-  savePlayerData() {
-    localStorage.setItem("playerData", JSON.stringify(this.player));
-  }
-
-  /**
-   * Сохраняет данные игрока.
+   * Загружает данные игрока.
    */
   loadPlayerData() {
-    let savedPlayerData = localStorage.getItem("playerData");
-    if (savedPlayerData) {
-      const playerData = JSON.parse(savedPlayerData);
-      this.player = new Player(playerData);
-    }
+    this.player = new Player();
+    this.player.load()
   }
 
   /**

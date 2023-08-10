@@ -33,5 +33,19 @@ export class Option {
     Object.entries(defaultValues).forEach(([key, defaultValue]) => {
       this[key] = optionData?.[key] ?? defaultValue;
     });
-  }  
+  }
+
+  /**
+    * Создает элемент опции.
+    * @returns {HTMLElement} - Элемент опции.
+    */
+  createOptionElement() {
+    const optionElement = document.createElement("li");
+    let optionText = this.text;
+    if (this.img_key) {
+      optionText = `<i class='ra ${this.img_key}'></i> ${optionText}`;
+    }
+    optionElement.innerHTML = optionText;
+    return optionElement;
+  }   
 }
