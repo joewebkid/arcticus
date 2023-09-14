@@ -53,4 +53,18 @@ export class Option {
   rollDice() {
     return this.getDiceRoll() >= this.dice;
   }
+
+  /**
+   * Создает элемент опции.
+   * @returns {HTMLElement} - Элемент опции.
+   */
+  createOptionElement() {
+    const optionElement = document.createElement("li");
+    let optionText = this.text;
+    if (this.img_key) {
+      optionText = `<i class='ra ${this.img_key}'></i> ${optionText}`;
+    }
+    optionElement.innerHTML = optionText;
+    return optionElement;
+  }
 }
