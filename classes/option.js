@@ -14,6 +14,7 @@ export class Option {
    * @param {Object} item - Предмет, связанный с опцией.
    * @param {Object} requirements - Требования для отображения опции.
    * @param {Object} hideIfStep - Требования для отображения опции.
+   * @param {Object} diceRequirements - Требования для прохождения броска.
    * @param {Object} showIfStep - Требования для отображения опции.
    */
   constructor(optionData) {
@@ -28,10 +29,28 @@ export class Option {
       requirements: null,
       hideIfStep: null,
       showIfStep: null,
+      diceRequirements: null,
+      dice: null,
     };
 
     Object.entries(defaultValues).forEach(([key, defaultValue]) => {
       this[key] = optionData?.[key] ?? defaultValue;
     });
-  }  
+  }
+
+  getDiceRoll(player) {
+    let total = 0;
+
+    this.diceRequirements.forEach((req) => {
+      total += player[req.name] * req.multiplier;
+    });
+
+    const roll = Math.floor(Math.random() * 6) + 1;
+
+    return total + roll;
+  }
+
+  rollDice() {
+    return this.getDiceRoll() >= this.dice;
+  }
 }
