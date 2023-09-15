@@ -42,7 +42,7 @@ export class Option {
     let total = 0;
 
     this.diceRequirements.forEach((req) => {
-      total += player[req.name] * req.multiplier;
+      total += player.stats[req];
     });
 
     const roll = Math.floor(Math.random() * 6) + 1;

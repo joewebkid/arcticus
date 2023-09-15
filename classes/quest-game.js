@@ -49,9 +49,13 @@ export class QuestGame {
    * Привязывает обработчики событий.
    */
   bindEventListeners() {
-    document.getElementById("chatContainer").addEventListener("click", () => { this.showNextMessage(); });
+    document.getElementById("chatContainer").addEventListener("click", () => {
+      this.showNextMessage();
+    });
 
-    document.getElementById("startButton").addEventListener("click", () => { this.startQuestGame(); });
+    document.getElementById("startButton").addEventListener("click", () => {
+      this.startQuestGame();
+    });
 
     document
       .getElementById("attributePointsContainer")
@@ -114,7 +118,7 @@ export class QuestGame {
 
         this.updatePlayerState(step);
         this.updateGameUI(step);
-        this.player.save()
+        this.player.save();
 
         // this.savePlayerData();
         // this.showNextMessage();
@@ -179,7 +183,7 @@ export class QuestGame {
   }
 
   updatePlayerInventory(step) {
-    console.log(step)
+    console.log(step);
     if (step.item) {
       this.player.inventory.push(step.item);
       new Message({
@@ -280,7 +284,7 @@ export class QuestGame {
    * @returns {HTMLElement} - Элемент опции.
    */
   createOptionElement(option) {
-    let optionElement = option.createOptionElement()
+    let optionElement = option.createOptionElement();
     optionElement.addEventListener("click", () => {
       this.selectOption(option);
     });
@@ -288,10 +292,10 @@ export class QuestGame {
     return optionElement;
   }
 
-  set options(x) {
-    console.log(x);
-    this.updateOptions();
-  }
+  // set options(x) {
+  //   console.log(x);
+  //   this.updateOptions();
+  // }
 
   /**
    * Выполняет выбор опции.
@@ -300,8 +304,8 @@ export class QuestGame {
   selectOption(option) {
     this.selectedOptions.push(option.id);
 
-    if (option.diceRequirements(this.player) && option.dice) {
-      if (!option.rollDice()) {
+    if (option.diceRequirements && option.dice) {
+      if (!option.rollDice(this.player)) {
         // Провалено
         return;
       }
@@ -360,7 +364,7 @@ export class QuestGame {
    */
   loadPlayerData() {
     this.player = new Player();
-    this.player.load()
+    this.player.load();
   }
 
   /**
