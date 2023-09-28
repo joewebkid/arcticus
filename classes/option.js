@@ -30,6 +30,7 @@ export class Option {
       hideIfStep: null,
       showIfStep: null,
       diceRequirements: null,
+      diceReqLabels: null,
       dice: null,
     };
 
@@ -61,6 +62,10 @@ export class Option {
   createOptionElement() {
     const optionElement = document.createElement("li");
     let optionText = this.text;
+    if (this.dice && this.diceRequirements)
+      this.diceReqLabels.forEach((reqLabel) => {
+        optionText += `[${reqLabel}]`;
+      });
     if (this.img_key) {
       optionText = `<i class='ra ${this.img_key}'></i> ${optionText}`;
     }

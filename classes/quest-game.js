@@ -284,7 +284,7 @@ export class QuestGame {
    * @returns {HTMLElement} - Элемент опции.
    */
   createOptionElement(option) {
-    let optionElement = option.createOptionElement();
+    let optionElement = option.createOptionElement(this.player);
     optionElement.addEventListener("click", () => {
       this.selectOption(option);
     });
