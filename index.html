@@ -131,26 +131,26 @@
           });
       });
     }
-    // let deferredPrompt;
+    let deferredPrompt;
 
-    // window.addEventListener('beforeinstallprompt', event => {
-    //   event.preventDefault();
-    //   deferredPrompt = event;
-    //   document.getElementById('installButton').style.display = 'block';
-    // });
+    window.addEventListener('beforeinstallprompt', event => {
+      event.preventDefault();
+      deferredPrompt = event;
+      document.getElementById('installButton').style.display = 'block';
+    });
 
-    // document.getElementById('installButton').addEventListener('click', () => {
-    //   if (deferredPrompt) {
-    //     deferredPrompt.prompt();
-    //     deferredPrompt.userChoice.then(choiceResult => {
-    //       if (choiceResult.outcome === 'accepted') {
-    //         console.log('PWA установлена');
-    //       }
-    //       deferredPrompt = null;
-    //       document.getElementById('installButton').style.display = 'none';
-    //     });
-    //   }
-    // });
+    document.getElementById('installButton').addEventListener('click', () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(choiceResult => {
+          if (choiceResult.outcome === 'accepted') {
+            console.log('PWA установлена');
+          }
+          deferredPrompt = null;
+          document.getElementById('installButton').style.display = 'none';
+        });
+      }
+    });
   </script>
 
 
