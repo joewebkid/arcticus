@@ -14,6 +14,7 @@ export class Option {
    * @param {Object} item - Предмет, связанный с опцией.
    * @param {Object} requirements - Требования для отображения опции.
    * @param {Object} hideIfStep - Требования для отображения опции.
+   * @param {Object} diceRequirements - Требования для прохождения броска.
    * @param {Object} showIfStep - Требования для отображения опции.
    */
   constructor(optionData) {
@@ -28,6 +29,9 @@ export class Option {
       requirements: null,
       hideIfStep: null,
       showIfStep: null,
+      diceRequirements: null,
+      diceReqLabels: null,
+      dice: null,
     };
 
     Object.entries(defaultValues).forEach(([key, defaultValue]) => {
@@ -35,17 +39,37 @@ export class Option {
     });
   }
 
+  getDiceRoll(player) {
+    let total = 0;
+
+    this.diceRequirements.forEach((req) => {
+      total += player.stats[req];
+    });
+
+    const roll = Math.floor(Math.random() * 6) + 1;
+
+    return total + roll;
+  }
+
+  rollDice() {
+    return this.getDiceRoll() >= this.dice;
+  }
+
   /**
-    * Создает элемент опции.
-    * @returns {HTMLElement} - Элемент опции.
-    */
+   * Создает элемент опции.
+   * @returns {HTMLElement} - Элемент опции.
+   */
   createOptionElement() {
     const optionElement = document.createElement("li");
     let optionText = this.text;
+    if (this.dice && this.diceRequirements)
+      this.diceReqLabels.forEach((reqLabel) => {
+        optionText += `[${reqLabel}]`;
+      });
     if (this.img_key) {
       optionText = `<i class='ra ${this.img_key}'></i> ${optionText}`;
     }
     optionElement.innerHTML = optionText;
     return optionElement;
-  }   
+  }
 }

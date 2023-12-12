@@ -14,7 +14,7 @@ export class QuestGame {
     this.currentMessageIndex = 4;
     this.messages = [];
     this.selectedOptions = [];
-    this.options = []; 
+    this.options = [];
   }
 
   /**
@@ -49,9 +49,13 @@ export class QuestGame {
    * Привязывает обработчики событий.
    */
   bindEventListeners() {
-    document.getElementById("chatContainer").addEventListener("click", () => { this.showNextMessage(); });
+    document.getElementById("chatContainer").addEventListener("click", () => {
+      this.showNextMessage();
+    });
 
-    document.getElementById("startButton").addEventListener("click", () => { this.startQuestGame(); });
+    document.getElementById("startButton").addEventListener("click", () => {
+      this.startQuestGame();
+    });
 
     document
       .getElementById("attributePointsContainer")
@@ -114,7 +118,7 @@ export class QuestGame {
 
         this.updatePlayerState(step);
         this.updateGameUI(step);
-        this.player.save()
+        this.player.save();
 
         // this.savePlayerData();
         // this.showNextMessage();
@@ -130,42 +134,42 @@ export class QuestGame {
    * @param {number} stepId - Идентификатор шага квеста.
    */
   loadQuest(stepId) {
-    return fetch(`${location.pathname}data/ar_${stepId}.json`).then((response) =>
-      response.json()
+    return fetch(`${location.pathname}data/ar_${stepId}.json`).then(
+      (response) => response.json()
     );
   }
 
   typingAnimation = () => {
     const lastBlock = this.currentMessageIndex === this.messages.length;
-    
+
     const typingIndicator = document.getElementById("typingIndicator");
     typingIndicator.style.display = lastBlock ? "none" : "flex";
 
     const optionsContainer = document.getElementById("optionsList");
     optionsContainer.style.display = lastBlock ? "block" : "none";
-    this.scrollToBottom()
-  }
+    this.scrollToBottom();
+  };
 
   /**
    * Показывает следующее сообщение из массива сообщений.
    */
   showNextMessage() {
-    this.typingAnimation()
+    this.typingAnimation();
 
     if (this.currentMessageIndex < this.messages.length) {
       const message = this.messages[this.currentMessageIndex];
-      
+
       if (!this.shouldShowObject(message)) {
         this.currentMessageIndex++;
         this.showNextMessage();
         return;
       }
-      
-      message.show()
+
+      message.show();
       this.currentMessageIndex++;
     }
   }
-  
+
   updatePlayerState(step) {
     this.updateVisitedSteps(step);
     this.updatePlayerInventory(step);
@@ -179,10 +183,13 @@ export class QuestGame {
   }
 
   updatePlayerInventory(step) {
-    console.log(step)
+    console.log(step);
     if (step.item) {
-      this.player.inventory.push(step.item);      
-      new Message({"author":"Система","content":`Получен предмет: ${step.item.name}`}).show()
+      this.player.inventory.push(step.item);
+      new Message({
+        author: "Система",
+        content: `Получен предмет: ${step.item.name}`,
+      }).show();
     }
   }
 
@@ -191,17 +198,21 @@ export class QuestGame {
       this.player.encounteredCharacters.push(step.character);
     }
   }
-  
+
   updateGameUI(step) {
-    const properties = ['location', 'messages', 'options'];
-  
+    const properties = ["location", "messages", "options"];
+
     for (const property of properties) {
       if (step[property]) {
-        if (property === 'messages') {
-          this.messages = step[property].map(messageData => new Message(messageData));
+        if (property === "messages") {
+          this.messages = step[property].map(
+            (messageData) => new Message(messageData)
+          );
           this.showNextMessage();
-        } else if (property === 'options') {
-          this.options = step[property].map(optionData => new Option(optionData));
+        } else if (property === "options") {
+          this.options = step[property].map(
+            (optionData) => new Option(optionData)
+          );
           this.updateOptions();
         } else {
           this.updateLocationImage(step[property].image);
@@ -209,14 +220,16 @@ export class QuestGame {
       }
     }
   }
-  
+
   /**
    * Обновляет изображение локации.
    * @param {string} imageUrl - URL изображения локации.
    */
   updateLocationImage(imageUrl) {
     const locationImage = document.getElementById("locationImage");
-    imageUrl = imageUrl ? `${location.pathname}img/locations/${imageUrl}` : `${location.pathname}img/locations/black.png`;
+    imageUrl = imageUrl
+      ? `${location.pathname}img/locations/${imageUrl}`
+      : `${location.pathname}img/locations/black.png`;
 
     locationImage.classList.add("open-animation");
     locationImage.src = imageUrl;
@@ -247,12 +260,12 @@ export class QuestGame {
    * @TODO Перенести в класс Object от которого будут наследоваться Options и Messages
    */
   shouldShowObject(object) {
-    const {visitedSteps, inventory, encounteredCharacters} = this.player
+    const { visitedSteps, inventory, encounteredCharacters } = this.player;
     const conditions = {
-      once:       this.selectedOptions.includes(object.id),
-      item:       inventory.includes(object.item),
-      characters: (new Set(object.characters)).hasAll(encounteredCharacters),
-      showIfStep: !(new Set(visitedSteps).hasAll(object.showIfStep)),
+      once: this.selectedOptions.includes(object.id),
+      item: inventory.includes(object.item),
+      characters: new Set(object.characters).hasAll(encounteredCharacters),
+      showIfStep: !new Set(visitedSteps).hasAll(object.showIfStep),
       hideIfStep: new Set(object.hideIfStep).hasAny(visitedSteps),
     };
 
@@ -271,7 +284,7 @@ export class QuestGame {
    * @returns {HTMLElement} - Элемент опции.
    */
   createOptionElement(option) {
-    let optionElement = option.createOptionElement()
+    let optionElement = option.createOptionElement(this.player);
     optionElement.addEventListener("click", () => {
       this.selectOption(option);
     });
@@ -279,40 +292,56 @@ export class QuestGame {
     return optionElement;
   }
 
+  // set options(x) {
+  //   console.log(x);
+  //   this.updateOptions();
+  // }
+
   /**
    * Выполняет выбор опции.
    * @param {Option} option - Объект опции.
    */
   selectOption(option) {
     this.selectedOptions.push(option.id);
-  
+
+    if (option.diceRequirements && option.dice) {
+      if (!option.rollDice(this.player)) {
+        // Провалено
+        return;
+      }
+    }
+
     if (option.nextStep) {
       this.executeStep(option.nextStep);
-    }else if (option.result) {
-      const { messages, options, item, image } = option.result;  
+    } else if (option.result) {
+      const { messages, options, item, image } = option.result;
       this.currentMessageIndex = 0;
-      
+
       if (image) {
         this.updateLocationImage(image);
       }
-      
+
       if (options) {
-        this.options = options.map((optionData) => new Option(optionData))
+        this.options = options.map((optionData) => new Option(optionData));
+        this.updateOptions();
       }
-  
+
       if (messages) {
         this.messages = messages.map((messageData) => new Message(messageData));
         this.showNextMessage();
       }
-  
+
       if (item) {
         this.player.inventory.push(item);
-        this.messages.push(new Message({"author":"Система","content":`Получен предмет: ${item.name}`}))
+        this.messages.push(
+          new Message({
+            author: "Система",
+            content: `Получен предмет: ${item.name}`,
+          })
+        );
       }
-      this.updateOptions();
     }
   }
-  
 
   /**
    * Очищает окно чата.
@@ -335,7 +364,7 @@ export class QuestGame {
    */
   loadPlayerData() {
     this.player = new Player();
-    this.player.load()
+    this.player.load();
   }
 
   /**

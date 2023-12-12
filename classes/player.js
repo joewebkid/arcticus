@@ -3,6 +3,7 @@ export class Player {
     const defaultValues = {
       name: "Герой",
       stats: new PlayerStats(),
+      class: "",
       skills: {},
       inventory: [],
       currentStep: 0,
@@ -14,7 +15,7 @@ export class Player {
       this[key] = playerData?.[key] ?? defaultValue;
     });
   }
-  
+
   load() {
     // Загрузить данные игрока из хранилища
     let savedData = localStorage.getItem("playerData");
@@ -22,19 +23,18 @@ export class Player {
       Object.assign(this, JSON.parse(savedData));
     }
   }
-  
+
   save() {
-    // Сохранить данные игрока в хранилище      
+    // Сохранить данные игрока в хранилище
     localStorage.setItem("playerData", JSON.stringify(this));
   }
 
   learnSkill(name, lvl_points) {
-    this.skills[name] = this.skills[name] ?? 0 + lvl_points; 
+    this.skills[name] = this.skills[name] ?? 0 + lvl_points;
   }
 }
 
 class PlayerStats {
-
   constructor(playerData) {
     const defaultValues = {
       health: 100,
@@ -50,11 +50,24 @@ class PlayerStats {
     });
   }
 
-   /**
+  static get labels() {
+    return {
+      health: "Жизнь",
+      attributePoints: "Очки атрибутов",
+      strength: "Сила",
+      agility: "Ловкость",
+      intelligence: "Интелект",
+      charisma: "Харизма",
+      defense: "Защита",
+      damage: "Урон",
+    };
+  }
+
+  /**
    * Увеличивает значение атрибута героя.
    * @param {string} attribute - Название атрибута, который нужно увеличить.
    */
-   increaseAttribute(attribute) {
+  increaseAttribute(attribute) {
     if (this.attributePoints > 0) {
       this.adjustAttribute(attribute, 1);
     }
