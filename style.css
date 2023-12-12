@@ -1,11 +1,24 @@
 /* Фэнтезийные стили для элементов */
-@import url("https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=MedievalSharp&family=Caveat&family=Russo+One&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Russo+One&display=swap");
 @import url(https://fonts.googleapis.com/css?family=Droid+Sans);
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
 }
+@font-face {
+  font-family: 'Revolvingdor';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Revolvingdor'), url('https://fonts.cdnfonts.com/s/56474/Revolvingdor-gxvd4.woff') format('woff');
+}
+@font-face {
+  font-family: "BreatheFire";
+  font-style: normal;
+  font-weight: 400;
+  src: local('BreatheFire'), url("./BreatheFire.ttf") format("truetype"),;
+}
+
 :root {
   --background-color: #f8f5ee;
   --text-color: #333333;
@@ -33,7 +46,7 @@ h1,
 h2,
 h3 {
   color: #00FF80;
-  font-family: 'MedievalSharp', cursive;
+  font-family: 'Revolvingdor', sans-serif;
 }
 
 p {
