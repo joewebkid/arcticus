@@ -45,16 +45,22 @@ body {
 h1,
 h2,
 h3 {
-<<<<<<< HEAD
   color: #00FF80;
   font-family: 'Revolvingdor', sans-serif;
-=======
-  color: #00ff80;
-  font-family: "MedievalSharp", cursive;
->>>>>>> 3d29e79eb5d3b6134b1cd4f30fee4ee21735a4b4
 }
 
 p {
+}
+
+.dice-panel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 200px;
+  height: 200px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
 }
 
 .button {
