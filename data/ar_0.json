@@ -51,7 +51,9 @@
     {
       "id": 0,
       "text": "Балабол",
+      "img_key": "ra-chemical-arrow",
       "result": {
+        "choose_class":"Балабол",
         "messages": [
           {
             "author": "Гайвин",
@@ -71,7 +73,9 @@
     {
       "id": 1,
       "text": "Проныра",
+      "img_key": "ra-boot-stomp",
       "result": {
+        "choose_class":"Проныра",
         "messages": [
           {
             "author": "Гайвин",
@@ -91,7 +95,9 @@
     {
       "id": 2,
       "text": "Борзый",
+      "img_key": "ra-axe",
       "result": {
+        "choose_class":"Борзый",
         "messages": [
           {
             "author": "Гайвин",

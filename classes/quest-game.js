@@ -202,7 +202,6 @@ export class QuestGame {
   }
 
   updatePlayerInventory(step) {
-    console.log(step);
     if (step.item) {
       this.player.inventory.push(step.item);
       new Message({
@@ -215,6 +214,12 @@ export class QuestGame {
   updateEncounteredCharacters(step) {
     if (step.character) {
       this.player.encounteredCharacters.push(step.character);
+    }
+  }
+
+  updatePlayerClass(step) {
+    if (step.choose_class) {
+      this.player.class = step.choose_class;
     }
   }
 
