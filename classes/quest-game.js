@@ -28,11 +28,11 @@ export class QuestGame {
 
     this.preloadImage(
       "/img/locations/ar1/ar1_knights.png",
-      "/img/persons/n/knight_1.png",
-      "/img/persons/n/knight_2.png",
       "/img/locations/ar1/ar2_calling.png",
       "/img/locations/ar1/ar2_reqruiting.png",
       "/img/locations/ar1/ar3_barracks.png",
+      "/img/persons/n/knight_1.png",
+      "/img/persons/n/knight_2.png",
       "/img/persons/n/recruiter.png",
       "/img/persons/n/gaivin.png",
      )
@@ -217,12 +217,6 @@ export class QuestGame {
     }
   }
 
-  updatePlayerClass(step) {
-    if (step.choose_class) {
-      this.player.class = step.choose_class;
-    }
-  }
-
   updateGameUI(step) {
     const properties = ["location", "messages", "options"];
 
@@ -338,7 +332,7 @@ export class QuestGame {
     if (option.nextStep) {
       this.executeStep(option.nextStep);
     } else if (option.result) {
-      const { messages, options, item, image } = option.result;
+      const { messages, options, item, image, choose_class } = option.result;
       this.currentMessageIndex = 0;
 
       if (image) {
@@ -354,6 +348,11 @@ export class QuestGame {
         this.messages = messages.map((messageData) => new Message(messageData));
         this.showNextMessage();
       }
+      
+      if (choose_class) {
+        this.player.class = choose_class;
+        this.player.save();
+      }
 
       if (item) {
         this.player.inventory.push(item);
@@ -363,6 +362,7 @@ export class QuestGame {
             content: `Получен предмет: ${item.name}`,
           })
         );
+        this.player.save();
       }
     }
   }
