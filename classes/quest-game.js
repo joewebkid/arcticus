@@ -25,6 +25,25 @@ export class QuestGame {
     this.registerServiceWorker();
     this.bindEventListeners();
     this.showIntroSection();
+
+    this.preloadImage(
+      "/img/locations/ar1/ar1_knights.png",
+      "/img/persons/n/knight_1.png",
+      "/img/persons/n/knight_2.png",
+      "/img/locations/ar1/ar2_calling.png",
+      "/img/locations/ar1/ar2_reqruiting.png",
+      "/img/locations/ar1/ar3_barracks.png",
+      "/img/persons/n/recruiter.png",
+      "/img/persons/n/gaivin.png",
+     )
+  }
+
+  preloadImage() {
+    var images = [];
+    for (var i = 0; i < arguments.length; i++) {
+        images[i] = new Image();
+        images[i].src = arguments[i];
+    }
   }
 
   /**
