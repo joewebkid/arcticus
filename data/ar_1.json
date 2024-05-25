@@ -110,6 +110,13 @@
       "img_key": "ra-perspective-dice-one",
       "diceDifficult": 10,
       "diceRequirements": ["agility"],
+      "failure": {
+        "messages": [
+        {
+          "author": "Автор",
+          "content": "Увы неудача"
+        }]
+      },
       "result": {
         "item": {
           "name": "Пожитки"
@@ -131,6 +138,7 @@
       "text": "Подумать",
       "once": 1,
       "result": {
+        "image": "ar1/ar6_quest.jpg",
         "messages": [
           {
             "author": "Автор",
@@ -139,6 +147,32 @@
           {
             "author": "Автор",
             "content": "Какой глупец упустит шанс на хорошее приключение."
+          }
+        ],
+        "options": [
+          {
+            "id": 1,            
+            "img_key": "ra-dice-one",
+            "text": "" ,
+            "nextStep": 2
+          },
+          {
+            "id": 2,
+            "img_key": "ra-dice-three",
+            "text": "",
+            "nextStep": 2
+          },
+          {
+            "id": 3,
+            "img_key": "ra-dice-five",
+            "text": "",
+            "nextStep": 2
+          },
+          {
+            "id": 4,
+            "img_key": "ra-dice-four",
+            "text": "",
+            "nextStep": 2
           }
         ]
       }

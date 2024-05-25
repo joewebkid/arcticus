@@ -321,24 +321,26 @@ export class QuestGame {
    * @param {Option} option - Объект опции.
    */
   selectOption(option) {
-    this.selectedOptions.push(option.id);
-
     const { diceRequirements, diceDifficult } = option;
     if (diceRequirements && diceDifficult) {
       
-      const dice = new Dice(diceDifficult, diceRequirements, this.player)
+      const dice = new Dice(diceDifficult, diceRequirements, this.player,
+        this.executeSelectedOption.bind(this, option)
+      )
       dice.showPanel()
-      return
-      // if (!option.rollDice(this.player)) {
-      //   // Провалено
-      //   return;
-      // }
+    }else{
+      this.executeSelectedOption(option)
     }
+  }
+
+  executeSelectedOption (option, status=true) {
+    this.selectedOptions.push(option.id);
+    const opt_result = status ? option.result:option.failure
 
     if (option.nextStep) {
       this.executeStep(option.nextStep);
-    } else if (option.result) {
-      const { messages, options, item, image, choose_class } = option.result;
+    } else if (opt_result) {
+      const { messages, options, item, image, choose_class } = opt_result;
       this.currentMessageIndex = 0;
 
       if (image) {

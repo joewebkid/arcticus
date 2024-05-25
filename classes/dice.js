@@ -1,5 +1,5 @@
 export class Dice {
-  constructor(difficult_level, diceRequirements, player) {
+  constructor(difficult_level, diceRequirements, player, executeOptionFunc) {
     this.buttonDiceOk = document.getElementById("buttonDiceOk")
     this.buttonDiceOk.style.display = "none"
     document.getElementById("difficult_level").classList.remove("success")
@@ -24,6 +24,7 @@ export class Dice {
     this.player = player;
     this.diceRequirements = diceRequirements;
     this.difficult_level = difficult_level;
+    this.executeOptionFunc = executeOptionFunc
   }
 
   getDiceRoll() {
@@ -44,12 +45,14 @@ export class Dice {
     setTimeout(() => {
       this.buttonDiceOk.style.display = "flex"      
       
-      if( this.diceValue <= this.difficult_level) {
+      if( this.diceValue >= this.difficult_level) {
         document.getElementById("difficult_level").classList.add("success")
         document.getElementById("anim-container").classList.add("success")
+        this.executeOptionFunc(true)
       }else{
         document.getElementById("difficult_level").classList.add("danger")
         document.getElementById("anim-container").classList.add("danger")
+        this.executeOptionFunc(false)
       }
     }, 2000);
   }
