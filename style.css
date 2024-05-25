@@ -56,11 +56,6 @@ p {
   display: flex;
   justify-content: center;
   align-items: center;
-  /* width: 200px;
-  height: 200px; */
-  /* border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #fff; */
 
   position: absolute;
   z-index: 9;
@@ -721,7 +716,7 @@ li {
   background-image: url("triangle.png");
   background-size: 100% 100%;
 }
-#text {
+#dice-text {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -732,4 +727,45 @@ li {
   color: white;
   background-size: 100% auto;
   font-family: "Effra";
+  margin-top: 38px;
+}
+#difficult_level {
+  border-radius: 14px;
+  background: aliceblue;
+  width: 46px;
+  height: 30px;
+  position: absolute;
+  margin-top: -200px;
+  z-index: 9999;
+  box-shadow: 0 0 16px 0 #517ac3;
+  outline: 2px solid #000000eb;
+  border: 2px solid #ccc;
+  display: flex;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 600;
+}
+#difficult_level.success, #anim-container.success {
+  outline: 2px solid #19c720;
+}
+#difficult_level.danger, #anim-container.danger {
+  outline: 2px solid #c71919;
+}
+#buttonDiceOk {
+  display: none;
+  padding: 0.1rem 1rem;
+  font-size: 1.2rem;
+  border: none;
+  color: #ffffff;
+  position: relative;
+  background-color: #673AB7;
+  box-shadow: 0 0 16px 0 #517ac3;
+  /* background-color: #4f4f4f; */
+  border-radius: 4px;
+  margin-top: 200px;
+  z-index: 9999;
+  cursor: pointer;
+}
+#buttonDiceOk:hover {
+  background-color: #2a0e5d !important;
 }

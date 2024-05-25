@@ -45,6 +45,7 @@
             "id": 2,
             "text": "Встать в очередь",
             "result": {
+              "image": "ar1/ar2_reqruiting2.jpg",
               "messages": [
                 {
                   "author": "Автор",
@@ -106,7 +107,9 @@
     {
       "id": 2,
       "text": "Забежать домой",
-      "once": 1,
+      "img_key": "ra-perspective-dice-one",
+      "diceDifficult": 10,
+      "diceRequirements": ["agility"],
       "result": {
         "item": {
           "name": "Пожитки"

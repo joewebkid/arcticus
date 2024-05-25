@@ -31,28 +31,12 @@ export class Option {
       showIfStep: null,
       diceRequirements: null,
       diceReqLabels: null,
-      dice: null,
+      diceDifficult: null,
     };
 
     Object.entries(defaultValues).forEach(([key, defaultValue]) => {
       this[key] = optionData?.[key] ?? defaultValue;
     });
-  }
-
-  getDiceRoll(player) {
-    let total = 0;
-
-    this.diceRequirements.forEach((req) => {
-      total += player.stats[req];
-    });
-
-    const roll = Math.floor(Math.random() * 6) + 1;
-
-    return total + roll;
-  }
-
-  rollDice() {
-    return this.getDiceRoll() >= this.dice;
   }
 
   /**
@@ -62,8 +46,8 @@ export class Option {
   createOptionElement() {
     const optionElement = document.createElement("li");
     let optionText = this.text;
-    if (this.dice && this.diceRequirements)
-      this.diceReqLabels.forEach((reqLabel) => {
+    if (this.diceDifficult && this.diceRequirements)
+      this.diceRequirements.forEach((reqLabel) => {
         optionText += `[${reqLabel}]`;
       });
     if (this.img_key) {

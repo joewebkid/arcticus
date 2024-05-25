@@ -1,6 +1,7 @@
 import { Player } from "./player.js";
 import { Message } from "./message.js";
 import { Option } from "./option.js";
+import { Dice } from "./dice.js";
 /**
  * Класс игры
  */
@@ -322,11 +323,16 @@ export class QuestGame {
   selectOption(option) {
     this.selectedOptions.push(option.id);
 
-    if (option.diceRequirements && option.dice) {
-      if (!option.rollDice(this.player)) {
-        // Провалено
-        return;
-      }
+    const { diceRequirements, diceDifficult } = option;
+    if (diceRequirements && diceDifficult) {
+      
+      const dice = new Dice(diceDifficult, diceRequirements, this.player)
+      dice.showPanel()
+      return
+      // if (!option.rollDice(this.player)) {
+      //   // Провалено
+      //   return;
+      // }
     }
 
     if (option.nextStep) {
