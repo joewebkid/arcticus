@@ -2,6 +2,7 @@ import { Player } from "./player.js";
 import { Message } from "./message.js";
 import { Option } from "./option.js";
 import { Dice } from "./dice.js";
+import { GameUI } from "./game-ui.js";
 /**
  * Класс игры
  */
@@ -16,6 +17,7 @@ export class QuestGame {
     this.messages = [];
     this.selectedOptions = [];
     this.options = [];
+    this.gameUi = null;
   }
 
   /**
@@ -77,11 +79,11 @@ export class QuestGame {
       this.startQuestGame();
     });
 
-    document
-      .getElementById("attributePointsContainer")
-      .addEventListener("click", (event) => {
-        this.handleAttributeClick(event);
-      });
+    // document
+    //   .getElementById("attributePointsContainer")
+    //   .addEventListener("click", (event) => {
+    //     this.handleAttributeClick(event);
+    //   });
 
     document
       .getElementById("optionsList")
@@ -397,6 +399,7 @@ export class QuestGame {
   loadPlayerData() {
     this.player = new Player();
     this.player.load();
+    this.gameUi = new GameUI(this.player);
   }
 
   /**

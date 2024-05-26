@@ -20,7 +20,7 @@
   ],
   "options": [
     {
-      "id": 1,
+      "id": 4,
       "text": "Быстрее туда!",
       "result": {
         "image": "ar1/ar2_reqruiting.png",
@@ -42,7 +42,7 @@
         ],
         "options": [
           {
-            "id": 2,
+            "id": 5,
             "text": "Встать в очередь",
             "result": {
               "image": "ar1/ar2_reqruiting2.jpg",
@@ -73,7 +73,7 @@
               ],
               "options": [
                 {
-                  "id": 2,
+                  "id": 6,
                   "text": "В замок",
                   "nextStep": 2
                 }
@@ -81,7 +81,7 @@
             }
           },
           {
-            "id": 3,
+            "id": 7,
             "text": "Послушать толпу",
             "once": 1,
             "result": {
@@ -95,7 +95,7 @@
                   "content": "Да, ребята говорили, что их крики еще долго долетали до ворот замка. Аж зубы сводило."
                 },
                 {
-                  "author": "Система",
+                  "author": "Автор",
                   "content": "Нужно разузнать больше об этом событии"
                 }
               ]
@@ -105,17 +105,18 @@
       }
     },
     {
-      "id": 2,
+      "id": 8,
       "text": "Забежать домой",
       "img_key": "ra-perspective-dice-one",
       "diceDifficult": 10,
       "diceRequirements": ["agility"],
       "failure": {
         "messages": [
-        {
-          "author": "Автор",
-          "content": "Увы неудача"
-        }]
+          {
+            "author": "Автор",
+            "content": "Увы неудача"
+          }
+        ]
       },
       "result": {
         "item": {
@@ -134,7 +135,7 @@
       }
     },
     {
-      "id": 3,
+      "id": 9,
       "text": "Подумать",
       "once": 1,
       "result": {

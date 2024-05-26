@@ -8,19 +8,22 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rpg-awesome/0.2.0/css/rpg-awesome.min.css" />
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <link rel="stylesheet" type="text/css" href="style.css?v=2">
   <link rel="stylesheet" type="text/css" href="elements.css?v=1">
   <!-- <script src="./classes/document.js"></script> -->
   <script src="f.js"></script>
   <script type="module" src="quest.js?v=5"></script>
   <script>
-    // ... Ваш JavaScript код ...
+    Telegram.WebApp.ready();
+    Telegram.WebApp.expand();
+    // Telegram.WebApp.onEvent("auth", (user) => this.onTelegramAuth(user));
   </script>
 </head>
 <body>
   <div id="intro">
     <div id="introContainer">
-      <h1 style="font-size: 4em; font-weight: 400;">Arkanita</h1>
+      <h1 style="font-size: 4em; font-weight: 400;color: white;">arkanita</h1>
 
       <!-- <button onclick="showCharacterCreation()" class="start_game">Начать игру</button> -->
       <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
@@ -58,7 +61,12 @@
 
 
   <div id="game" style="display: none;">
-
+    <div class="game-buttons">
+      <button id="btnInventory" class="medieval-button"><img src="/img/page/bag.svg" alt=""></button>
+      <button id="btnStats" class="medieval-button"><img src="/img/page/archer.svg" alt=""></button>
+      <button id="btnMap" class="medieval-button"><img src="/img/page/game_map.svg" alt=""></button>
+      <button id="btnSettings" class="medieval-button"><img src="/img/page/settings.svg" alt=""></button>
+    </div>
     
     <div id="dice-panel" class="dice-panel" style="display: none;" >
       <div id="difficult_level"></div>
@@ -90,20 +98,31 @@
       <div id="buttonDiceOk">ОК</div>
     </div>
 
-    <div id="attributePointsContainer"></div>
-    <div id="location" style="display: none;">
-      <h2>Локация: <span id="locationName"></span></h2>
-    </div>
-
-    <div id="inventory" style="display: none;">
+    <!-- Inventory -->
+    <div class="menu_block" id="inventory" style="display: none;">
       <div id="inventory-content">
         <div id="inventoryList" class="inventory-grid"></div>
       </div>
     </div>
 
-    <div id="playerStats" style="display: none;">
+    <!-- Player Stats -->
+    <div class="menu_block" id="playerStats" style="display: none;">
       <h2>Характеристики:</h2>
+      <ul id="statsList"></ul>
     </div>
+
+    <!-- Map -->
+    <div class="menu_block" id="map" style="display: none;">
+      <h2>Карта</h2>
+      <!-- Map content -->
+    </div>
+
+    <!-- Settings -->
+    <div class="menu_block" id="settings" style="display: none;">
+      <h2>Настройки</h2>
+      <!-- Settings content -->
+    </div>
+
     <div class="front_of">
       <img id="locationImage" src="img/locations/black.png" alt="Локация">
       <div id="systemMessage"></div>

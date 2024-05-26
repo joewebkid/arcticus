@@ -49,8 +49,8 @@ class PlayerStats {
       this[key] = playerData?.[key] ?? defaultValue;
     });
   }
-
-  static get labels() {
+// static get 
+static get labels() {
     return {
       health: "Жизнь",
       attributePoints: "Очки атрибутов",
