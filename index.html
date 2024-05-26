@@ -4,6 +4,7 @@
   <title>Арканита</title>
   <link rel="manifest" href="manifest.json">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fontfaceobserver/2.3.0/fontfaceobserver.min.js" integrity="sha512-7g/mtWY/pF5yAwrcHhRBBrDK3Tr1Xbjaweymp5/jiEmKJurJkRfi5grW5mKQx78wPRoQPOu1zfeWdJtsCw8QsQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,6 +20,18 @@
     Telegram.WebApp.expand();
     // Telegram.WebApp.onEvent("auth", (user) => this.onTelegramAuth(user));
   </script>
+  <script>
+    // инициализация
+    var fontOneLoad = new FontFaceObserver('RPGAwesome', {});
+    fontOneLoad
+      .check()
+      .then(function () { 
+          console.log("LOAD")
+        // событие, когда шрифт загружен
+         // добавляем класс тегу html 
+        //  document.documentElement.className += " fontOneLoad";
+     });
+   </script>
 </head>
 <body>
   <div id="intro">
@@ -64,6 +77,7 @@
     <div class="game-buttons">
       <button id="btnInventory" class="medieval-button"><img src="/img/page/bag.svg" alt=""></button>
       <button id="btnStats" class="medieval-button"><img src="/img/page/archer.svg" alt=""></button>
+      <button id="btnQuest" class="medieval-button"><img src="/img/page/quest.svg" alt=""></button>
       <button id="btnMap" class="medieval-button"><img src="/img/page/game_map.svg" alt=""></button>
       <button id="btnSettings" class="medieval-button"><img src="/img/page/settings.svg" alt=""></button>
     </div>
@@ -109,6 +123,12 @@
     <div class="menu_block" id="playerStats" style="display: none;">
       <h2>Характеристики:</h2>
       <ul id="statsList"></ul>
+    </div>
+
+    <!-- Quest -->
+    <div class="menu_block" id="quest" style="display: none;">
+      <h2>Квесты</h2>
+      <!-- Quest content -->
     </div>
 
     <!-- Map -->

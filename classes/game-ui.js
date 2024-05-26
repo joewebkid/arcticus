@@ -6,6 +6,7 @@ export class GameUI {
       this.sections = {
         inventory: document.getElementById('inventory'),
         stats: document.getElementById('playerStats'),
+        quest: document.getElementById('quest'),
         map: document.getElementById('map'),
         settings: document.getElementById('settings')
       };
@@ -55,6 +56,8 @@ export class GameUI {
           return 'inventory';
         case 'btnStats':
           return 'stats';
+        case 'btnQuest':
+          return 'quest';
         case 'btnMap':
           return 'map';
         case 'btnSettings':
@@ -76,6 +79,9 @@ export class GameUI {
                 break;
             case 'stats':
                 this.displayStats();
+                break;
+            case 'quest':
+                this.sections.quest.style.display = 'block';
                 break;
             case 'map':
                 this.sections.map.style.display = 'block';

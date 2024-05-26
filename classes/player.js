@@ -1,3 +1,6 @@
+import { Quest } from './quest.js';
+import { Map } from './map.js';
+
 export class Player {
   constructor(playerData) {
     const defaultValues = {
@@ -9,6 +12,8 @@ export class Player {
       currentStep: 0,
       visitedSteps: [],
       encounteredCharacters: [],
+      quests: [],
+      map: new Map("default_map_image.png"),
     };
 
     Object.entries(defaultValues).map(([key, defaultValue]) => {
@@ -31,6 +36,23 @@ export class Player {
 
   learnSkill(name, lvl_points) {
     this.skills[name] = this.skills[name] ?? 0 + lvl_points;
+  } 
+  
+  startQuest(id, name, description, type) {
+    const quest = new Quest(id, name, description, type);
+    this.quests.push(quest);
+  }
+
+  updateQuestStatus(id, newStatus) {
+    const quest = this.quests.find(q => q.id === id);
+    if (quest) {
+      quest.updateStatus(newStatus);
+    }
+  }
+
+  getQuestStatus(id) {
+    const quest = this.quests.find(q => q.id === id);
+    return quest ? quest.status : null;
   }
 }
 
