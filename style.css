@@ -858,3 +858,9 @@ li {
   padding: 82px 30px 0px 30px;
   box-sizing: border-box;
 }
+
+.quest-item {
+  background: aliceblue;
+  border-radius: 6px;
+  padding: 3px 12px;
+}

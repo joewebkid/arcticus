@@ -342,7 +342,7 @@ export class QuestGame {
     if (option.nextStep) {
       this.executeStep(option.nextStep);
     } else if (opt_result) {
-      const { messages, options, item, image, choose_class } = opt_result;
+      const { messages, options, item, image, choose_class, quest } = opt_result;
       this.currentMessageIndex = 0;
 
       if (image) {
@@ -361,7 +361,16 @@ export class QuestGame {
       
       if (choose_class) {
         this.player.class = choose_class;
-        this.player.save();
+      }
+
+      if (quest) {
+        this.player.quests.push(quest);
+        this.messages.push(
+          new Message({
+            author: "Система",
+            content: `Новая задача: ${quest.name}`,
+          })
+        );
       }
 
       if (item) {
@@ -372,6 +381,9 @@ export class QuestGame {
             content: `Получен предмет: ${item.name}`,
           })
         );
+      }
+      
+      if (choose_class||quest||item) {
         this.player.save();
       }
     }

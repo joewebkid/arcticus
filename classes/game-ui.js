@@ -13,6 +13,7 @@ export class GameUI {
   
       this.inventoryList = document.getElementById('inventoryList');
       this.statsList = document.getElementById('statsList');
+      this.questsList = document.getElementById('questsList');
   
       this.labels = {
         health: "Жизнь",
@@ -75,20 +76,21 @@ export class GameUI {
     displaySectionContent(sectionName) {
         switch (sectionName) {
             case 'inventory':
-                this.displayInventory();
-                break;
+              this.displayInventory();
+              break;
             case 'stats':
-                this.displayStats();
-                break;
+              this.displayStats();
+              break;
             case 'quest':
-                this.sections.quest.style.display = 'block';
-                break;
+              this.displayQuest();
+              // this.sections.quest.style.display = 'block';
+              break;
             case 'map':
-                this.sections.map.style.display = 'block';
-                break;
+              this.sections.map.style.display = 'block';
+              break;
             case 'settings':
-                this.sections.settings.style.display = 'block';
-                break;
+              this.sections.settings.style.display = 'block';
+              break;
             // Add more cases if additional sections need specific display logic
             default:
             break;
@@ -114,6 +116,17 @@ export class GameUI {
           listItem.textContent = `${this.labels[stat]}: ${stats[stat]}`;
           this.statsList.appendChild(listItem);
         }
+      });
+    }
+
+    displayQuest() {
+      console.log(this.player.quests)
+      this.questsList.innerHTML = '';
+      this.player.quests.forEach(quest => {
+        const listQuestItem = document.createElement('div');
+        listQuestItem.className = 'quest-item';
+        listQuestItem.textContent = quest.name; // ---------
+        this.questsList.appendChild(listQuestItem);
       });
     }
   }
