@@ -26,17 +26,17 @@
     {  
       "id": 16,
       "text": "Зайти в кухню",
-      "nextStep": 5
+      "nextStep": 6
     },
     {  
       "id": 17,
       "text": "Вернутся в казарму",
-      "nextStep": 5
+      "nextStep": 7
     },
     {
       "id": 18, 
       "text": "Поговорить с наставником",
-      "nextStep": 6
+      "nextStep": 8
     }
   ] 
 }
