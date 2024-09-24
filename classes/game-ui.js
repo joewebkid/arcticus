@@ -26,6 +26,8 @@ export class GameUI {
         damage: "Урон",
       };
   
+      this.expandedQuest = null;
+
       this.setupEventListeners();
     }
   
@@ -33,6 +35,7 @@ export class GameUI {
       this.menuButtons.forEach(button => {
         button.addEventListener('click', (event) => this.handleMenuClick(event));
       });
+      this.questsList.addEventListener('click', (event) => this.handleQuestClick(event));
     }
   
     handleMenuClick(event) {
@@ -118,6 +121,38 @@ export class GameUI {
         }
       });
     }
+    handleQuestClick(event) {
+      const questItem = event.target.closest('.quest-item');
+      if (questItem) {
+        this.toggleQuestDescription(questItem.dataset.questId);
+      }
+    }
+  
+    toggleQuestDescription(questId) {
+      const questItem = this.questsList.querySelector(`[data-quest-id="${questId}"]`);
+      const questDescription = questItem.querySelector('.quest-description');
+  
+      if (this.expandedQuest === questId) {
+        questItem.classList.remove('expanded');
+        questDescription.style.display = 'none';
+        this.expandedQuest = null;
+      } else {
+        if (this.expandedQuest !== null) {
+          this.closeQuestDescription();
+        }
+        questItem.classList.add('expanded');
+        questDescription.style.display = 'block';
+        this.expandedQuest = questId;
+      }
+    }
+  
+    closeQuestDescription() {
+      const previousQuest = this.questsList.querySelector(`[data-quest-id="${this.expandedQuest}"]`);
+      const previousQuestDescription = previousQuest.querySelector('.quest-description');
+      previousQuest.classList.remove('expanded');
+      previousQuestDescription.style.display = 'none';
+    }
+  
 
     displayQuest() {
       console.log(this.player.quests)
@@ -125,7 +160,14 @@ export class GameUI {
       this.player.quests.forEach(quest => {
         const listQuestItem = document.createElement('div');
         listQuestItem.className = 'quest-item';
+        listQuestItem.dataset.questId = quest.id;
         listQuestItem.textContent = quest.name; // ---------
+        
+        const questDescription = document.createElement('div');
+        questDescription.className = 'quest-description';
+        questDescription.textContent = quest.description;
+        listQuestItem.appendChild(questDescription);
+        
         this.questsList.appendChild(listQuestItem);
       });
     }

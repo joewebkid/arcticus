@@ -337,6 +337,7 @@ export class QuestGame {
 
   executeSelectedOption (option, status=true) {
     this.selectedOptions.push(option.id);
+    console.log(status, status ? option.result:option.failure, option)
     const opt_result = status ? option.result:option.failure
 
     if (option.nextStep) {

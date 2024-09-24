@@ -4,6 +4,8 @@ export class Dice {
     this.buttonDiceOk.style.display = "none"
     document.getElementById("difficult_level").classList.remove("success")
     document.getElementById("anim-container").classList.remove("success")
+    document.getElementById("difficult_level").classList.remove("danger")
+    document.getElementById("anim-container").classList.remove("danger")
 
     const containerId = "dice";
     const textId = "dice-text";
@@ -45,6 +47,7 @@ export class Dice {
     setTimeout(() => {
       this.buttonDiceOk.style.display = "flex"      
       
+
       if( this.diceValue >= this.difficult_level) {
         document.getElementById("difficult_level").classList.add("success")
         document.getElementById("anim-container").classList.add("success")

@@ -123,7 +123,7 @@ li {
   left: 0;
   /* opacity: 0.2; */
   z-index: -1;    
-  background: url(img/system/first.png);
+  background: url(img/system/first-min.jpg);
   background-size: cover;
   background-position: center;
 }
@@ -863,4 +863,51 @@ li {
   background: aliceblue;
   border-radius: 6px;
   padding: 3px 12px;
+}
+
+
+
+
+.quest-item {
+  background-color: #f1f1f1;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  position: relative;
+}
+
+.quest-item:hover {
+  background-color: #e6e6e6;
+}
+
+.quest-item .quest-description {
+  display: none;
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.quest-item.expanded {
+  background-color: #e6e6e6;
+}
+
+.quest-item.expanded .quest-description {
+  display: block;
+}
+
+.quest-item::after {
+  content: "+";
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  font-size: 20px;
+  font-weight: bold;
+  color: #666;
+}
+
+.quest-item.expanded::after {
+  content: "-";
 }

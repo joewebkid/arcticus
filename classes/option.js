@@ -9,6 +9,7 @@ export class Option {
    * @param {string} img_key - Ключ изображения опции.
    * @param {number} nextStep - Идентификатор следующего шага.
    * @param {Object} result - Результат выбора опции.
+   * @param {Object} failure - Отрицательный результат выбора опции.
    * @param {Object} once - Показывать один раз.
    * @param {Object} characters - встреченные персонажи.
    * @param {Object} item - Предмет, связанный с опцией.
@@ -24,6 +25,7 @@ export class Option {
       img_key: "",
       nextStep: null,
       result: null,
+      failure: null,
       once: null,
       item: null,
       requirements: null,
