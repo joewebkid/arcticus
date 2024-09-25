@@ -7,8 +7,6 @@
     scroll-behavior: auto;
   }
 }
-
-@import url(https://db.onlinewebfonts.com/c/aeb32ac36fb513d9cf87050b50b1d58c?family=House+of+the+Dragon+PERSONAL+Regular);
 @font-face {
   font-family: "Revolvingdor";
   font-style: normal;
@@ -47,26 +45,10 @@ body {
 .front_of {
   position: relative;
 }
-@font-face {
-  font-family: "House of the Dragon PERSONAL Regular";
-  src: url("https://db.onlinewebfonts.com/t/aeb32ac36fb513d9cf87050b50b1d58c.eot");
-  src: url("https://db.onlinewebfonts.com/t/aeb32ac36fb513d9cf87050b50b1d58c.eot?#iefix")
-      format("embedded-opentype"),
-    url("https://db.onlinewebfonts.com/t/aeb32ac36fb513d9cf87050b50b1d58c.woff2")
-      format("woff2"),
-    url("https://db.onlinewebfonts.com/t/aeb32ac36fb513d9cf87050b50b1d58c.woff")
-      format("woff"),
-    url("https://db.onlinewebfonts.com/t/aeb32ac36fb513d9cf87050b50b1d58c.ttf")
-      format("truetype"),
-    url("https://db.onlinewebfonts.com/t/aeb32ac36fb513d9cf87050b50b1d58c.svg#House of the Dragon PERSONAL Regular")
-      format("svg");
-}
 h1,
 h2,
 h3 {
   color: #00ff80;
-  font-family: "House of the Dragon PERSONAL Regular";
-  /* font-family: 'Revolvingdor', sans-serif; */
 }
 
 p {
