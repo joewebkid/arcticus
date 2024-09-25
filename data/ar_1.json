@@ -1,7 +1,7 @@
 {
   "id": 1,
   "location": {
-    "image": "ar1/ar2_calling.png"
+    "image": "ar1/ar2_calling.jpg"
   },
   "messages": [
     {
@@ -23,7 +23,7 @@
       "id": 4,
       "text": "Быстрее туда!",
       "result": {
-        "image": "ar1/ar2_reqruiting.png",
+        "image": "ar1/ar2_reqruiting.jpg",
         "messages": [
           {
             "author": "Автор",
@@ -110,6 +110,7 @@
       "img_key": "ra-perspective-dice-one",
       "diceDifficult": 10,
       "diceRequirements": ["agility"],
+      "once": 1,
       "failure": {
         "messages": [
           {
@@ -152,9 +153,9 @@
         ],
         "options": [
           {
-            "id": 1,            
+            "id": 1,
             "img_key": "ra-dice-one",
-            "text": "" ,
+            "text": "",
             "nextStep": 2
           },
           {

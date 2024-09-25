@@ -7,6 +7,7 @@ export class Option {
    * @param {number} id - Идентификатор опции.
    * @param {string} text - Текст опции.
    * @param {string} img_key - Ключ изображения опции.
+   * @param {string} img_key - Путь к изображению опции.
    * @param {number} nextStep - Идентификатор следующего шага.
    * @param {Object} result - Результат выбора опции.
    * @param {Object} failure - Отрицательный результат выбора опции.
@@ -22,7 +23,8 @@ export class Option {
     const defaultValues = {
       id: null,
       text: "",
-      img_key: "",
+      img_key: false,
+      img: false,
       nextStep: null,
       result: null,
       failure: null,
@@ -54,6 +56,9 @@ export class Option {
       });
     if (this.img_key) {
       optionText = `<i class='ra ${this.img_key}'></i> ${optionText}`;
+    }
+    if (this.img) {
+      optionText = `<img src='${this.img}'></i> ${optionText}`;
     }
     optionElement.innerHTML = optionText;
     return optionElement;

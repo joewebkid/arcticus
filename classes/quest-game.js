@@ -29,7 +29,7 @@ export class QuestGame {
     this.bindEventListeners();
     this.showIntroSection();
 
-    this.preloadImage(
+    const imagesToPreload = [
       "/img/locations/ar1/ar1_knights.png",
       "/img/locations/ar1/ar2_calling.png",
       "/img/locations/ar1/ar2_reqruiting.png",
@@ -38,15 +38,31 @@ export class QuestGame {
       "/img/persons/n/knight_2.png",
       "/img/persons/n/recruiter.png",
       "/img/persons/n/gaivin.png",
-     )
+    ];
+
+    // Предзагружаем изображения
+    this.preloadImages(imagesToPreload)
+      .then(() => {
+        console.log("Все изображения успешно загружены");
+        // Начать игру или выполнить другие действия
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
-  preloadImage() {
-    var images = [];
-    for (var i = 0; i < arguments.length; i++) {
-        images[i] = new Image();
-        images[i].src = arguments[i];
-    }
+  preloadImages(imageUrls) {
+    return Promise.all(
+      imageUrls.map((url) => {
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.src = url;
+          img.onload = () => resolve(url); // Успешная загрузка
+          img.onerror = () =>
+            reject(new Error(`Ошибка загрузки изображения: ${url}`)); // Ошибка при загрузке
+        });
+      })
+    );
   }
 
   /**
@@ -267,6 +283,7 @@ export class QuestGame {
     optionsContainer.innerHTML = "";
 
     this.options.forEach((option) => {
+      // console.log("shouldShowObject", this.shouldShowObject(option), option);
       if (this.shouldShowObject(option)) {
         const optionElement = this.createOptionElement(option);
         optionsContainer.appendChild(optionElement);
@@ -283,12 +300,14 @@ export class QuestGame {
   shouldShowObject(object) {
     const { visitedSteps, inventory, encounteredCharacters } = this.player;
     const conditions = {
-      once: this.selectedOptions.includes(object.id),
+      // once: this.selectedOptions.includes(object.id),
+      once: visitedSteps.includes(object.id),
       item: inventory.includes(object.item),
       characters: new Set(object.characters).hasAll(encounteredCharacters),
       showIfStep: !new Set(visitedSteps).hasAll(object.showIfStep),
       hideIfStep: new Set(object.hideIfStep).hasAny(visitedSteps),
     };
+    // console.log("conditions", conditions);
 
     for (const condition in conditions) {
       if (object[condition] && conditions[condition]) {
@@ -325,25 +344,28 @@ export class QuestGame {
   selectOption(option) {
     const { diceRequirements, diceDifficult } = option;
     if (diceRequirements && diceDifficult) {
-      
-      const dice = new Dice(diceDifficult, diceRequirements, this.player,
+      const dice = new Dice(
+        diceDifficult,
+        diceRequirements,
+        this.player,
         this.executeSelectedOption.bind(this, option)
-      )
-      dice.showPanel()
-    }else{
-      this.executeSelectedOption(option)
+      );
+      dice.showPanel();
+    } else {
+      this.executeSelectedOption(option);
     }
   }
 
-  executeSelectedOption (option, status=true) {
+  executeSelectedOption(option, status = true) {
     this.selectedOptions.push(option.id);
-    console.log(status, status ? option.result:option.failure, option)
-    const opt_result = status ? option.result:option.failure
+
+    const opt_result = status ? option.result : option.failure;
 
     if (option.nextStep) {
       this.executeStep(option.nextStep);
     } else if (opt_result) {
-      const { messages, options, item, image, choose_class, quest } = opt_result;
+      const { messages, options, item, image, choose_class, quest } =
+        opt_result;
       this.currentMessageIndex = 0;
 
       if (image) {
@@ -352,14 +374,13 @@ export class QuestGame {
 
       if (options) {
         this.options = options.map((optionData) => new Option(optionData));
-        this.updateOptions();
       }
 
       if (messages) {
         this.messages = messages.map((messageData) => new Message(messageData));
         this.showNextMessage();
       }
-      
+
       if (choose_class) {
         this.player.class = choose_class;
       }
@@ -383,10 +404,10 @@ export class QuestGame {
           })
         );
       }
-      
-      if (choose_class||quest||item) {
-        this.player.save();
-      }
+
+      this.updatePlayerState(option);
+      this.updateOptions();
+      this.player.save();
     }
   }
 

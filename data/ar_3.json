@@ -1,7 +1,7 @@
 {
   "id": 3,
   "location": {
-    "image": "ar1/ar3_castle_main.png" 
+    "image": "ar1/ar3_castle_main.jpg"
   },
 
   "messages": [
@@ -15,28 +15,28 @@
   "options": [
     {
       "id": 14,
-      "text": "Осмотреть кузницу", 
+      "text": "Осмотреть кузницу",
       "nextStep": 4
     },
-    {  
+    {
       "id": 15,
       "text": "Посетить конюшню",
       "nextStep": 5
     },
-    {  
+    {
       "id": 16,
       "text": "Зайти в кухню",
       "nextStep": 6
     },
-    {  
+    {
       "id": 17,
       "text": "Вернутся в казарму",
       "nextStep": 7
     },
     {
-      "id": 18, 
+      "id": 18,
       "text": "Поговорить с наставником",
       "nextStep": 8
     }
-  ] 
+  ]
 }
