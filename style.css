@@ -163,13 +163,26 @@ li {
   height: 49vh;
   overflow-y: scroll;
 }
-#chatWindow::before {
+/* #chatWindow::before {
   background: url(https://img.freepik.com/free-vector/old-paper-texture_1048-3717.jpg?w=826&t=st=1690405877~exp=1690406477~hmac=980ccfd…);
   content: "";
   position: fixed;
   width: 100%;
   height: 100%;
   opacity: 0.2;
+  z-index: 0;
+  max-width: 467px;
+} */
+#chatWindow::before {
+  background: url(https://img.freepik.com/free-vector/old-paper-texture_1048-3717.jpg?w=826&t=st=1690405877~exp=1690406477~hmac=980ccfd…);
+  background: url(./img/test-2.jpg);
+  content: "";
+  background-position: -30px -10px;
+  background-size: 113% 496px;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  opacity: 1;
   z-index: 0;
   max-width: 467px;
 }
@@ -777,27 +790,32 @@ li {
 }
 
 .medieval-button {
-  background-color: #8b4513; /* коричневый цвет для средневекового стиля */
-  border: 2px solid #daa520; /* золотая окантовка */
-  background-color: #5f5252c2;
+  /* background-color: #8b4513; 
+  border: 2px solid #daa520; 
+  background-color: #5f5252c2;     */
+  background-color: #2196f340;
   border: none;
   color: white;
   padding: 2px 5px;
   font-size: 16px;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 100%;
   margin: 5px;
   font-family: "MedievalSharp", cursive; /* Используем средневековый шрифт */
   box-shadow: 0 0 16px 0 #517ac3;
   box-shadow: 0 0 16px 0 #795548d4;
+  transition: all 0.2s ;
 }
 .medieval-button img {
-  width: 30px;
+  width: 30px;    
+  filter: drop-shadow(2px 4px 6px #3f51b5) sepia(1);
 }
 
 .medieval-button:hover {
-  background-color: #a0522d; /* темно-коричневый при наведении */
-  background-color: #61331eb0;
+  background-color: #61331e00;
+}
+.medieval-button:hover  img {
+  filter: drop-shadow(2px 4px 6px #0e1c66) sepia(1);
 }
 
 .game-buttons {
@@ -807,6 +825,15 @@ li {
   top: 10px;
   width: 100%;
   z-index: 9;
+}
+.game-buttons {
+  display: flex;
+  justify-content: space-around;
+  position: absolute;
+  top: 22px;
+  width: 89%;
+  z-index: 9;
+  padding: 0px 25px;
 }
 
 .inventory-grid {

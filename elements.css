@@ -6,6 +6,7 @@
     filter: url("#gooey");
     position: relative;
     background-color: #FF5722;
+    top: 305px;
   }
   #startButton:focus {
     outline: none;
