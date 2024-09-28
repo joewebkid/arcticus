@@ -1,0 +1,31 @@
+{
+    "id": "castle",
+    "image": "maps/castle_map.jpg",
+    "points": [
+      {
+        "id": 1,
+        "optionId": 3,
+        "name": "Ворота замка",
+        "x": 100,
+        "y": 400,
+        "parents": []
+      },
+      {
+        "id": 2,
+        "optionId": 4,
+        "name": "Казармы",
+        "x": 400,
+        "y": 300,
+        "parents": [1]
+      },
+      {
+        "id": 3,
+        "optionId": 5,
+        "name": "Тронный зал",
+        "x": 600,
+        "y": 150,
+        "parents": [2]
+      }
+    ]
+  }
+  

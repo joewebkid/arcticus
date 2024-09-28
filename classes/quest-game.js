@@ -3,6 +3,7 @@ import { Message } from "./message.js";
 import { Option } from "./option.js";
 import { Dice } from "./dice.js";
 import { GameUI } from "./game-ui.js";
+import { GameMap } from './game-map.js';
 /**
  * Класс игры
  */
@@ -17,7 +18,8 @@ export class QuestGame {
     this.messages = [];
     this.selectedOptions = [];
     this.options = [];
-    this.gameUi = null;
+    this.gameUi = null;    
+    this.map = new GameMap('pointContainer', 'mapImage', this.currentStep);
   }
 
   /**
@@ -210,8 +212,19 @@ export class QuestGame {
 
   updatePlayerState(step) {
     this.updateVisitedSteps(step);
+    this.updateCurrentStep(step);
     this.updatePlayerInventory(step);
     this.updateEncounteredCharacters(step);
+  }
+
+  /**
+   * Обновляет текущий шаг и отображает изменения на карте.
+   * @param {Object} step - Текущий шаг.
+   */
+  updateCurrentStep(step) {
+    this.currentStep = step.id
+    this.player.currentStep = step.id
+    this.map.updateCurrentStep(step);
   }
 
   updateVisitedSteps(step) {
@@ -426,6 +439,18 @@ export class QuestGame {
     const optionsList = document.getElementById("optionsList");
     optionsList.innerHTML = "";
   }
+  
+  /**
+   * Загружает данные карты и передает их в класс GameMap.
+   */
+  loadMapData() {
+    // Пример получения данных карты (можно динамически загружать разные карты)
+    fetch('./data/maps/mp_0.json')
+      .then(response => response.json())
+      .then(mapData => {
+        this.map.loadMap(mapData);
+      });
+  }
 
   /**
    * Загружает данные игрока.
@@ -434,6 +459,7 @@ export class QuestGame {
     this.player = new Player();
     this.player.load();
     this.gameUi = new GameUI(this.player);
+    this.loadMapData();
   }
 
   /**

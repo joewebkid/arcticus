@@ -36,6 +36,19 @@ export class GameUI {
         button.addEventListener('click', (event) => this.handleMenuClick(event));
       });
       this.questsList.addEventListener('click', (event) => this.handleQuestClick(event));
+
+      document.getElementById('resetQuestButton').addEventListener('click', () => {
+        this.resetQuest();
+      });
+    }
+    
+    resetQuest() {
+      if (confirm('Вы уверены, что хотите сбросить квест и начать заново?')) {
+        // Удаляем данные игрока из localStorage
+        localStorage.removeItem('playerData');
+        // Перезагружаем страницу для начала игры заново
+        window.location.reload();
+      }
     }
   
     handleMenuClick(event) {
