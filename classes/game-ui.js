@@ -187,7 +187,7 @@ export class GameUI {
         
         const questDescription = document.createElement('div');
         questDescription.className = 'quest-description';
-        questDescription.textContent = quest.description;
+        questDescription.innerHTML = quest.description;
         listQuestItem.appendChild(questDescription);
         
         this.questsList.appendChild(listQuestItem);

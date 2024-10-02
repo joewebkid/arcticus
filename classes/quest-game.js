@@ -32,14 +32,14 @@ export class QuestGame {
     this.showIntroSection();
 
     const imagesToPreload = [
-      "/img/locations/ar1/ar1_knights.jpg",
-      "/img/locations/ar1/ar2_calling.jpg",
-      "/img/locations/ar1/ar2_reqruiting.jpg",
-      "/img/locations/ar1/ar3_barracks.jpg",
-      "/img/persons/n/knight_1.jpg",
-      "/img/persons/n/knight_2.jpg",
-      "/img/persons/n/recruiter.jpg",
-      "/img/persons/n/gaivin.jpg",
+      "img/locations/ar1/ar1_knights.jpg",
+      "img/locations/ar1/ar2_calling.jpg",
+      "img/locations/ar1/ar2_reqruiting.jpg",
+      "img/locations/ar1/ar3_barracks.jpg",
+      "img/persons/n/knight_1.jpg",
+      "img/persons/n/knight_2.jpg",
+      "img/persons/n/recruiter.jpg",
+      "img/persons/n/gaivin.jpg",
     ];
 
     // Предзагружаем изображения
@@ -312,10 +312,13 @@ export class QuestGame {
    */
   shouldShowObject(object) {
     const { visitedSteps, inventory, encounteredCharacters } = this.player;
+    if (object.id == 19)
+      console.log(object, object.item, inventory,inventory.includes(object.item))
     const conditions = {
       // once: this.selectedOptions.includes(object.id),
       once: visitedSteps.includes(object.id),
-      item: inventory.includes(object.item),
+      showIfItem: !inventory.includes(object.item),
+      hideIfItem: inventory.includes(object.item),
       characters: new Set(object.characters).hasAll(encounteredCharacters),
       showIfStep: !new Set(visitedSteps).hasAll(object.showIfStep),
       hideIfStep: new Set(object.hideIfStep).hasAny(visitedSteps),
@@ -327,6 +330,8 @@ export class QuestGame {
         return false;
       }
     }
+    if (object.id == 19)
+      console.log(conditions)
 
     return true;
   }
@@ -399,7 +404,20 @@ export class QuestGame {
       }
 
       if (quest) {
-        this.player.quests.push(quest);
+        let alreadyIsset = (this.player.quests.filter(function(v) {
+          return v['id'] == quest.id;
+        }))[0]
+        
+        if(alreadyIsset){
+          const itemToReplace = this.player.quests.find(item => {
+            console.log(item, item.id === quest.id, quest)
+            if (item.id === quest.id) {
+                item.description += "<br>" + quest.description;
+                return true;
+            }
+          });
+        }else
+          this.player.quests.push(quest);
         this.messages.push(
           new Message({
             author: "Система",
