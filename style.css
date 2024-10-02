@@ -976,6 +976,7 @@ div#chatImg::before {
   background: aliceblue;
   border-radius: 6px;
   padding: 3px 12px;
+  margin-bottom: 10px;
 }
 
 .quest-item {
