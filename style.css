@@ -116,6 +116,15 @@ li {
   background: url(img/system/first-min.jpg);
   background-size: cover;
   background-position: center;
+  animation: show 4s;
+}
+@keyframes show {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 .highlight {
   background-color: #ffe6e63b;
@@ -155,7 +164,18 @@ li {
   box-sizing: border-box;
 }
 #intro {
-  background-color: #673ab7;
+}
+#intro::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: url("data:image/jpg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDACgcHiMeGSgjISMtKygwPGRBPDc3PHtYXUlkkYCZlo+AjIqgtObDoKrarYqMyP/L2u71////m8H////6/+b9//j/2wBDASstLTw1PHZBQXb4pYyl+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj/wAARCAA6AB0DASIAAhEBAxEB/8QAGQAAAwEBAQAAAAAAAAAAAAAAAAMEBQIB/8QAIhAAAgICAwEBAAMBAAAAAAAAAQIAEQMhBBIxQRMiUWGB/8QAFgEBAQEAAAAAAAAAAAAAAAAAAQAC/8QAFxEBAQEBAAAAAAAAAAAAAAAAAAERMf/aAAwDAQACEQMRAD8AWg/VQyKa81PcrHjAgqA5+EfJPgzZsf8AHCQCTehA4+Q+Ut1JJ3c1rOKsDq5c3Y6+/AYnK64yA3piUTPjZiFK68+TjI7u1sATVaklfDxk4C1aJMoVTYiuDlC4/wA27bJYa1NDCEzDsp/5/UJcFiP8x7RNSHkANmJ1VAipo87MuJeik2famY3oBoUBHTmGYe3RippTLuI4CuwXtquoMzcJZWBXevh8jjyWxAjGo3skmENe5u+UllTXlyfLatRIsD5KByWVWZUIJFEXqSdf9gehSQTRG4WK8Ai52skD8uF3ujBpxezIP//Z");
+  background-size: cover;
+  z-index: -1;
+  filter: blur(27px);
 }
 /* CHAT WINDOW */
 #chatWindow {
@@ -175,7 +195,7 @@ li {
   max-width: 467px;
 } */
 #chatWindow::before {
-  background: url(https://img.freepik.com/free-vector/old-paper-texture_1048-3717.jpg?w=826&t=st=1690405877~exp=1690406477~hmac=980ccfd…);
+  /*background: url(https://img.freepik.com/free-vector/old-paper-texture_1048-3717.jpg?w=826&t=st=1690405877~exp=1690406477~hmac=980ccfd…);*/
   background: url(./img/chat-window2.jpg);
   content: "";
   /* background-position: -30px -10px;
@@ -188,6 +208,7 @@ li {
   opacity: 1;
   z-index: 0;
   max-width: 470px;
+  height: 51vh;
 }
 
 #chatContainer {
