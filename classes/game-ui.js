@@ -36,6 +36,19 @@ export class GameUI {
         button.addEventListener('click', (event) => this.handleMenuClick(event));
       });
       this.questsList.addEventListener('click', (event) => this.handleQuestClick(event));
+
+      document.getElementById('resetQuestButton').addEventListener('click', () => {
+        this.resetQuest();
+      });
+    }
+
+    resetQuest() {
+      if (confirm('Вы уверены, что хотите сбросить квест и начать заново?')) {
+        // Удаляем данные игрока из localStorage
+        localStorage.removeItem('playerData');
+        // Перезагружаем страницу для начала игры заново
+        window.location.reload();
+      }
     }
   
     handleMenuClick(event) {
@@ -44,9 +57,14 @@ export class GameUI {
       const sectionName = this.getSectionName(buttonId);
   
       if (this.currentOpenSection === sectionName) {
+        document.getElementById(buttonId).classList.remove('active')
         this.sections[sectionName].style.display = 'none';
         this.currentOpenSection = null;
       } else {
+        document.querySelectorAll(".medieval-button").forEach(element => 
+          element.classList.remove('active')
+        );
+        document.getElementById(buttonId).classList.add('active')
         this.closeAllSections();
         this.sections[sectionName].style.display = 'block';
         this.currentOpenSection = sectionName;
@@ -161,11 +179,15 @@ export class GameUI {
         const listQuestItem = document.createElement('div');
         listQuestItem.className = 'quest-item';
         listQuestItem.dataset.questId = quest.id;
-        listQuestItem.textContent = quest.name; // ---------
+        
+        const questTitle = document.createElement('div');
+        questTitle.className = 'quest-title';
+        questTitle.textContent = quest.name;
+        listQuestItem.appendChild(questTitle);
         
         const questDescription = document.createElement('div');
         questDescription.className = 'quest-description';
-        questDescription.textContent = quest.description;
+        questDescription.innerHTML = quest.description;
         listQuestItem.appendChild(questDescription);
         
         this.questsList.appendChild(listQuestItem);

@@ -1,0 +1,31 @@
+{
+    "id": "village",
+    "image": "img/maps/village_home.jpg",
+    "points": [
+      {
+        "id": 1,
+        "optionId": 0,
+        "name": "Площадь",
+        "x": 150,
+        "y": 300,
+        "parents": []
+      },
+      {
+        "id": 2,
+        "optionId": 1,
+        "name": "Дом Гайвина",
+        "x": 300,
+        "y": 500,
+        "parents": [1]
+      },
+      {
+        "id": 3,
+        "optionId": 2,
+        "name": "Таверна",
+        "x": 500,
+        "y": 350,
+        "parents": [1]
+      }
+    ]
+  }
+  

@@ -110,6 +110,7 @@
     <!-- Inventory -->
     <div class="menu_block" id="inventory" style="display: none;">
       <div id="inventory-content">
+        <h2>Инвентарь:</h2>
         <div id="inventoryList" class="inventory-grid"></div>
       </div>
     </div>
@@ -131,12 +132,20 @@
     <div class="menu_block" id="map" style="display: none;">
       <h2>Карта</h2>
       <!-- Map content -->
+      <div id="mapContainer">
+        <img id="mapImage" src="" alt="Карта локации" style="width: 100%; height: 100%;">
+        <div id="pointContainer">
+
+        </div>
+      </div>
     </div>
 
     <!-- Settings -->
     <div class="menu_block" id="settings" style="display: none;">
       <h2>Настройки</h2>
       <!-- Settings content -->
+      <button id="resetQuestButton" class="btnGlobal">Сбросить квест</button>
+
     </div>
 
     <div class="front_of">
@@ -151,15 +160,17 @@
       <div id="systemMessage"></div>
     </div>
     <!-- <div id="message"></div> -->
-    <div id="chatWindow">
-      <div id="chatContainer"></div>
-      <div id="typingIndicator">
-        <span class="dot"></span>
-        <span class="dot"></span>
-        <span class="dot"></span>
-      </div>
-      <div id="options">
-        <ul id="optionsList"></ul>
+    <div id="chatImg">
+      <div id="chatWindow">
+        <div id="chatContainer"></div>
+        <div id="typingIndicator">
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
+        <div id="options">
+          <ul id="optionsList"></ul>
+        </div>
       </div>
     </div>
 

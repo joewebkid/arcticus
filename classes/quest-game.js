@@ -3,6 +3,7 @@ import { Message } from "./message.js";
 import { Option } from "./option.js";
 import { Dice } from "./dice.js";
 import { GameUI } from "./game-ui.js";
+import { GameMap } from './game-map.js';
 /**
  * Класс игры
  */
@@ -17,7 +18,8 @@ export class QuestGame {
     this.messages = [];
     this.selectedOptions = [];
     this.options = [];
-    this.gameUi = null;
+    this.gameUi = null;    
+    this.map = new GameMap('pointContainer', 'mapImage', this.currentStep);
   }
 
   /**
@@ -30,14 +32,14 @@ export class QuestGame {
     this.showIntroSection();
 
     const imagesToPreload = [
-      "/img/locations/ar1/ar1_knights.jpg",
-      "/img/locations/ar1/ar2_calling.jpg",
-      "/img/locations/ar1/ar2_reqruiting.jpg",
-      "/img/locations/ar1/ar3_barracks.jpg",
-      "/img/persons/n/knight_1.jpg",
-      "/img/persons/n/knight_2.jpg",
-      "/img/persons/n/recruiter.jpg",
-      "/img/persons/n/gaivin.jpg",
+      "img/locations/ar1/ar1_knights.jpg",
+      "img/locations/ar1/ar2_calling.jpg",
+      "img/locations/ar1/ar2_reqruiting.jpg",
+      "img/locations/ar1/ar3_barracks.jpg",
+      "img/persons/n/knight_1.jpg",
+      "img/persons/n/knight_2.jpg",
+      "img/persons/n/recruiter.jpg",
+      "img/persons/n/gaivin.jpg",
     ];
 
     // Предзагружаем изображения
@@ -210,8 +212,19 @@ export class QuestGame {
 
   updatePlayerState(step) {
     this.updateVisitedSteps(step);
+    this.updateCurrentStep(step);
     this.updatePlayerInventory(step);
     this.updateEncounteredCharacters(step);
+  }
+
+  /**
+   * Обновляет текущий шаг и отображает изменения на карте.
+   * @param {Object} step - Текущий шаг.
+   */
+  updateCurrentStep(step) {
+    this.currentStep = step.id
+    this.player.currentStep = step.id
+    this.map.updateCurrentStep(step);
   }
 
   updateVisitedSteps(step) {
@@ -299,10 +312,13 @@ export class QuestGame {
    */
   shouldShowObject(object) {
     const { visitedSteps, inventory, encounteredCharacters } = this.player;
+    if (object.id == 19)
+      console.log(object, object.item, inventory,inventory.includes(object.item))
     const conditions = {
       // once: this.selectedOptions.includes(object.id),
       once: visitedSteps.includes(object.id),
-      item: inventory.includes(object.item),
+      showIfItem: !inventory.includes(object.item),
+      hideIfItem: inventory.includes(object.item),
       characters: new Set(object.characters).hasAll(encounteredCharacters),
       showIfStep: !new Set(visitedSteps).hasAll(object.showIfStep),
       hideIfStep: new Set(object.hideIfStep).hasAny(visitedSteps),
@@ -314,6 +330,8 @@ export class QuestGame {
         return false;
       }
     }
+    if (object.id == 19)
+      console.log(conditions)
 
     return true;
   }
@@ -386,7 +404,20 @@ export class QuestGame {
       }
 
       if (quest) {
-        this.player.quests.push(quest);
+        let alreadyIsset = (this.player.quests.filter(function(v) {
+          return v['id'] == quest.id;
+        }))[0]
+        
+        if(alreadyIsset){
+          const itemToReplace = this.player.quests.find(item => {
+            console.log(item, item.id === quest.id, quest)
+            if (item.id === quest.id) {
+                item.description += "<br>" + quest.description;
+                return true;
+            }
+          });
+        }else
+          this.player.quests.push(quest);
         this.messages.push(
           new Message({
             author: "Система",
@@ -426,6 +457,18 @@ export class QuestGame {
     const optionsList = document.getElementById("optionsList");
     optionsList.innerHTML = "";
   }
+  
+  /**
+   * Загружает данные карты и передает их в класс GameMap.
+   */
+  loadMapData() {
+    // Пример получения данных карты (можно динамически загружать разные карты)
+    fetch('./data/maps/mp_0.json')
+      .then(response => response.json())
+      .then(mapData => {
+        this.map.loadMap(mapData);
+      });
+  }
 
   /**
    * Загружает данные игрока.
@@ -434,6 +477,7 @@ export class QuestGame {
     this.player = new Player();
     this.player.load();
     this.gameUi = new GameUI(this.player);
+    this.loadMapData();
   }
 
   /**

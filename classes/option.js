@@ -13,7 +13,12 @@ export class Option {
    * @param {Object} failure - Отрицательный результат выбора опции.
    * @param {Object} once - Показывать один раз.
    * @param {Object} characters - встреченные персонажи.
-   * @param {Object} item - Предмет, связанный с опцией.
+   * @param {Object} hideIfItem - Предмет, связанный с опцией.
+   * @param {Object} showIfItem - Предмет, связанный с опцией.
+   * @param {Object} showIfQuest - Квест.
+   * @param {Object} hideIfQuest - Квест.
+   * @param {Object} showIfStatus - Квест.
+   * @param {Object} hideIfStatus - Квест.
    * @param {Object} requirements - Требования для отображения опции.
    * @param {Object} hideIfStep - Требования для отображения опции.
    * @param {Object} diceRequirements - Требования для прохождения броска.
@@ -29,7 +34,12 @@ export class Option {
       result: null,
       failure: null,
       once: null,
-      item: null,
+      hideIfItem: null,
+      showIfItem: null,
+      hideIfQuest: null,
+      showIfQuest: null,
+      hideIfStatus: null,
+      showIfStatus: null,
       requirements: null,
       hideIfStep: null,
       showIfStep: null,
