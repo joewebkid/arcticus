@@ -34,35 +34,37 @@
     top: 65px;">
 
       <!-- <button onclick="showCharacterCreation()" class="start_game">Начать игру</button> -->
-      <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
-        <defs>
-          <filter id="gooey">
-            <!-- in="sourceGraphic" -->
-            <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur" />
-            <feColorMatrix in="blur" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9"
-              result="highContrastGraphic" />
-            <feComposite in="SourceGraphic" in2="highContrastGraphic" operator="atop" />
-          </filter>
-        </defs>
-      </svg>
+      <div id="start_button">
+        <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+          <defs>
+            <filter id="gooey">
+              <!-- in="sourceGraphic" -->
+              <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur" />
+              <feColorMatrix in="blur" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9"
+                result="highContrastGraphic" />
+              <feComposite in="SourceGraphic" in2="highContrastGraphic" operator="atop" />
+            </filter>
+          </defs>
+        </svg>
 
-      <i class="ra ra-two-hearts" style="opacity: 0;position: absolute;"></i>
+        <i class="ra ra-two-hearts" style="opacity: 0;position: absolute;"></i>
 
-      <button id="startButton">
-        Начнем
-        <span class="bubbles">
-          <span class="bubble"></span>
-          <span class="bubble"></span>
-          <span class="bubble"></span>
-          <span class="bubble"></span>
-          <span class="bubble"></span>
-          <span class="bubble"></span>
-          <span class="bubble"></span>
-          <span class="bubble"></span>
-          <span class="bubble"></span>
-          <span class="bubble"></span>
-        </span>
-      </button>
+        <button id="startButton">
+          Начнем
+          <span class="bubbles">
+            <span class="bubble"></span>
+            <span class="bubble"></span>
+            <span class="bubble"></span>
+            <span class="bubble"></span>
+            <span class="bubble"></span>
+            <span class="bubble"></span>
+            <span class="bubble"></span>
+            <span class="bubble"></span>
+            <span class="bubble"></span>
+            <span class="bubble"></span>
+          </span>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -104,7 +106,7 @@
           <div id="dice-text"></div>
         </div>
       </div>
-      <div id="buttonDiceOk">ОК</div>
+      <div id="buttonDiceOk"></div>
     </div>
 
     <!-- Inventory -->

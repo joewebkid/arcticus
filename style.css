@@ -1,4 +1,9 @@
-/* Фэнтезийные стили для элементов */
+/* Фэнтезийные стили для элементов
+
+https://codepen.io/arickle/pen/XKjMZY
+https://codepen.io/mgkOV/pen/qzNegg
+
+*/
 
 @import url("https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Russo+One&display=swap");
 @import url(https://fonts.googleapis.com/css?family=Droid+Sans);
@@ -21,7 +26,23 @@
   font-weight: 400;
   src: local("BreatheFire"), url("./BreatheFire.ttf") format("truetype");
 }
-
+#preloader {
+  display: block;
+  position: absolute;
+  width: 100%;
+  z-index: 2;
+  bottom: 0;
+}
+#start_button {
+  width: 160px;
+  /* visibility: hidden;
+  opacity: 0; */
+  transition: 1s all;
+}
+#start_button.active {
+  visibility: visible;
+  opacity: 1;
+}
 :root {
   --background-color: #f8f5ee;
   --text-color: #333333;
@@ -289,8 +310,8 @@ li {
 }
 
 .message .avatar {
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   /* border-radius: 50%; */
   text-align: center;
   background: #9e9e9e;
@@ -513,7 +534,7 @@ li {
   margin-top: 6px;
   padding: 7px 12px;
   border-radius: 5px;
-  color: lightgreen;    
+  color: lightgreen;
   background-color: #4a3a2e;
   display: inline-block;
   opacity: 0.8;
@@ -569,7 +590,7 @@ li {
   transition: all 0.5s;
 }
 .inventory-item::before {
-  content: '';
+  content: "";
   background: url(img/system/skin.png);
   position: absolute;
   width: 100%;
@@ -580,7 +601,7 @@ li {
   z-index: 0;
 }
 .inventory-item:hover {
-  opacity: 0.9
+  opacity: 0.9;
 }
 
 .inventory-item img {
@@ -790,10 +811,11 @@ li {
   width: 200px;
   height: 200px;
   background: #fff;
+  background: #ffffef;
   border-radius: 9px;
-  box-shadow: 0 0 16px 0 #517ac3;
-  outline: 2px solid #000000eb;
-  border: 4px solid #ccc;
+  box-shadow: 0 0 27px 0 #ffffff;
+  outline: 2px solid #51372e;
+  border: 2px solid #5f5442;
 }
 #dice {
   position: absolute;
@@ -816,6 +838,7 @@ li {
   z-index: 1;
   background-image: url("triangle.png");
   background-size: 100% 100%;
+  filter: sepia(1);
 }
 #dice-text {
   display: flex;
@@ -832,25 +855,57 @@ li {
 }
 #difficult_level {
   border-radius: 14px;
-  background: aliceblue;
+  background: #5a503e;
+  color: #ffffff;
   width: 46px;
   height: 30px;
   position: absolute;
   margin-top: -200px;
   z-index: 9999;
   box-shadow: 0 0 16px 0 #517ac3;
-  outline: 2px solid #000000eb;
-  border: 2px solid #ccc;
+  border: 3px solid #50352e;
   display: flex;
   justify-content: center;
   font-size: 18px;
   font-weight: 600;
 }
-#difficult_level.success,
+#difficult_level::after {
+  content: "Класс сложности";
+  position: absolute;
+  top: -46px;
+  width: 160px;
+  background: #5a503e;
+  color: #ffffff;
+  padding: 6px 10px 20px;
+  z-index: -1;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  border: 2px solid #000000eb;
+  border: 4px solid #5f5442;
+  border-bottom: 0;
+}
+#difficult_level.success {
+  border: 2px solid #19c720;
+}
 #anim-container.success {
   outline: 2px solid #19c720;
 }
-#difficult_level.danger,
+#difficult_level.success + div + #buttonDiceOk {
+  background: #19c720;
+}
+
+#difficult_level.success + div + #buttonDiceOk::after {
+  content: "Успешно";
+}
+#difficult_level.danger + div + #buttonDiceOk {
+  background: #c71919;
+}
+#difficult_level.danger + div + #buttonDiceOk::after {
+  content: "Провал";
+}
+#difficult_level.danger {
+  border: 2px solid #c71919;
+}
 #anim-container.danger {
   outline: 2px solid #c71919;
 }
@@ -862,15 +917,18 @@ li {
   color: #ffffff;
   position: relative;
   background-color: #673ab7;
+  box-shadow: 0 0 16px 0 #8291ab6e;
   box-shadow: 0 0 16px 0 #517ac3;
   /* background-color: #4f4f4f; */
   border-radius: 4px;
   margin-top: 200px;
   z-index: 9999;
   cursor: pointer;
+  transition: all 0.5s;
 }
 #buttonDiceOk:hover {
-  background-color: #2a0e5d !important;
+  box-shadow: 0 0 16px 0 #517ac3;
+  /* background-color: #2a0e5d !important; */
 }
 
 .medieval-button {
@@ -910,7 +968,7 @@ li {
   filter: drop-shadow(2px 4px 6px #0e1c66) sepia(1);
 }
 div#chatImg::before {
-  content: '';
+  content: "";
   background: url(./img/chat-window-frame.jpg);
   background-size: contain;
   position: absolute;
@@ -947,7 +1005,6 @@ div#chatImg::before {
   gap: 10px;
 }
 
-
 #statsList {
   list-style-type: none;
   padding: 0;
@@ -968,7 +1025,7 @@ div#chatImg::before {
   position: relative;
 }
 #statsList li::before {
-  content: '';
+  content: "";
   background: url(img/system/skin.png);
   position: absolute;
   width: 100%;
@@ -988,7 +1045,14 @@ div#chatImg::before {
   height: 100%;
   z-index: 8;
   background: #333333e6;
-  background: linear-gradient(358deg, #333333b5, #333333e6, #333333e6, #333333, transparent);
+  background: linear-gradient(
+    358deg,
+    #333333b5,
+    #333333e6,
+    #333333e6,
+    #333333,
+    transparent
+  );
   padding: 82px 30px 0px 30px;
   box-sizing: border-box;
 }
@@ -1009,7 +1073,7 @@ div#chatImg::before {
 }
 
 .quest-item::before {
-  content: '';
+  content: "";
   background: url(https://cdn1.ozone.ru/multimedia/1020272124.jpg);
   position: absolute;
   width: 100%;
