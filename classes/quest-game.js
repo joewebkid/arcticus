@@ -30,12 +30,17 @@ export class QuestGame {
   initialize() {
     const resourceLoader = new ResourceLoader(resources);
 
-    resourceLoader.preloadAllResources().then(() => {
-      this.loadPlayerData();
-      this.bindEventListeners();
-      this.showIntroSection();
-      this.registerServiceWorker();
-    });
+    this.loadPlayerData();
+    this.bindEventListeners();
+    this.showIntroSection();
+    this.registerServiceWorker();
+
+    // resourceLoader.preloadAllResources().then(() => {
+    //   this.loadPlayerData();
+    //   this.bindEventListeners();
+    //   this.showIntroSection();
+    //   this.registerServiceWorker();
+    // });
   }
 
   /**
