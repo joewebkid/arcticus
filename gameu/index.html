@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.js" integrity="sha512-lOrm9FgT1LKOJRUXF3tp6QaMorJftUjowOWiDcG5GFZ/q7ukof19V0HKx/GWzXCdt9zYju3/KhBNdCLzK8b90Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.css" integrity="sha512-0p3K0H3S6Q4bEWZ/WmC94Tgit2ular2/n0ESdfEX8l172YyQj8re1Wu9s/HT9T/T2osUw5Gx/6pAZNk3UKbESw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Игра на уравнения</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .game-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .blocks {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .block {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 30%;
+            text-align: center;
+        }
+        .answer-input {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        }
+        .choices {
+            display: flex;
+            gap: 6px;
+            padding: 6px 0;
+        }
+        .choice {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .choice:hover {
+            background-color: #e0e0e0;
+        }
+        .submit-btn {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .submit-btn:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <h1>Игра на уравнения</h1>
+        <div id="game">
+            <!-- Вопросы будут генерироваться здесь -->
+        </div>
+        <button class="submit-btn" onclick="checkAnswer()">Проверить ответ</button>
+        <p id="result"></p>
+        <div class="progress-container">
+            <progress id="progressBar" value="50" max="100"></progress>
+            <img id="character" src="happy.png" alt="Character" width="100">
+        </div>
+    </div>
+
+
+    <script src="game.js"></script>
+</body>
+</html>
