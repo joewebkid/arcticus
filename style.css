@@ -259,6 +259,7 @@ li {
   box-sizing: border-box;
   position: relative;
   z-index: 1;
+  min-height: 59%;
 }
 
 .message {
@@ -972,7 +973,7 @@ li {
 }
 div#chatImg::before {
   content: "";
-  background: url(./img/chat-window-frame.jpg);
+  background: url(./img/chat-window-frame.png);
   background-size: contain;
   position: absolute;
   width: 100%;
