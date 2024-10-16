@@ -120,7 +120,10 @@
       },
       "result": {
         "item": {
-          "name": "Пожитки"
+          "name": "Пожитки",
+          "img_key": "",
+          "slot": -1,
+          "id": 0
         },
         "messages": [
           {
