@@ -82,7 +82,10 @@
             "result": {
               "status": "Воняет",
               "item": {
-                "name": "Мешок яблок"
+                "name": "Мешок яблок",
+                "img_key": "apples-bag.png",
+                "slot": -1,
+                "id": 2
               },
               "messages": [
                 {

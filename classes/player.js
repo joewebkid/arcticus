@@ -1,5 +1,5 @@
-import { Quest } from './quest.js';
-import { Map } from './map.js';
+import { Quest } from "./quest.js";
+import { Map } from "./map.js";
 
 export class Player {
   constructor(playerData) {
@@ -9,6 +9,7 @@ export class Player {
       class: "",
       skills: {},
       inventory: [],
+      equippedItems: {},
       currentStep: 0,
       visitedSteps: [],
       encounteredCharacters: [],
@@ -36,23 +37,34 @@ export class Player {
 
   learnSkill(name, lvl_points) {
     this.skills[name] = this.skills[name] ?? 0 + lvl_points;
-  } 
-  
+  }
+
   startQuest(id, name, description, type) {
     const quest = new Quest(id, name, description, type);
     this.quests.push(quest);
   }
 
   updateQuestStatus(id, newStatus) {
-    const quest = this.quests.find(q => q.id === id);
+    const quest = this.quests.find((q) => q.id === id);
     if (quest) {
       quest.updateStatus(newStatus);
     }
   }
 
   getQuestStatus(id) {
-    const quest = this.quests.find(q => q.id === id);
+    const quest = this.quests.find((q) => q.id === id);
     return quest ? quest.status : null;
+  }
+
+  equipItem(item) {
+    // this.equippedItems = {};
+    if (this.equippedItems[item.slot]) this.equippedItems[item.slot] = null;
+    else this.equippedItems[item.slot] = item.id;
+    this.save();
+  }
+
+  unequipItem(slot) {
+    this.save();
   }
 }
 
@@ -71,8 +83,8 @@ class PlayerStats {
       this[key] = playerData?.[key] ?? defaultValue;
     });
   }
-// static get 
-static get labels() {
+  // static get
+  static get labels() {
     return {
       health: "Жизнь",
       attributePoints: "Очки атрибутов",
@@ -117,16 +129,15 @@ static get labels() {
       this.attributePoints;
     document.getElementById(`${attribute}Value`).innerText = this[attribute];
   }
-
 }
- /**
-   * @param {масса} 
-   * 
-   * @param {доспехи} 
-   * @param {дисциплина} 
-   * @param {скорость} 
-   * @param {атака в бл. бою} 
-   * @param {защита в бл. бою} 
-   * @param {Сила оружия}  
-   * @param {Усиление натиска} 
-   */
+/**
+ * @param {масса}
+ *
+ * @param {доспехи}
+ * @param {дисциплина}
+ * @param {скорость}
+ * @param {атака в бл. бою}
+ * @param {защита в бл. бою}
+ * @param {Сила оружия}
+ * @param {Усиление натиска}
+ */

@@ -121,7 +121,7 @@
       "result": {
         "item": {
           "name": "Пожитки",
-          "img_key": "",
+          "img_key": "d20.png",
           "slot": -1,
           "id": 0
         },

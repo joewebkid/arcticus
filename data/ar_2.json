@@ -44,7 +44,7 @@
       "result": {
         "item": {
           "name": "Дырявая защитная куртка",
-          "img_key": "",
+          "img_key": "armour.png",
           "slot": 1,
           "id": 1
         },

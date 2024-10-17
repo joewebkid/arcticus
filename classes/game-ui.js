@@ -125,14 +125,58 @@ export class GameUI {
 
   displayInventory() {
     this.inventoryList.innerHTML = "";
-    for (const [i, value] of Array(42).entries()) {
+
+    for (const [i, value] of Array(36).entries()) {
       const listItem = document.createElement("div");
       listItem.className = "inventory-item";
       if (typeof this.player.inventory[i] !== "undefined") {
-        listItem.textContent = this.player.inventory[i].name;
+        const item = this.player.inventory[i];
+        const image = document.createElement("img");
+        image.src = "./img/icons/" + item.img_key;
+        listItem.appendChild(image);
+        this.createItemInfo(item, listItem);
+        // listItem.addEventListener("click", () =>
+        //   this.showItemInfo(item, listItem)
+        // );
       }
       this.inventoryList.appendChild(listItem);
     }
+  }
+
+  // Отображение информации о предмете
+  createItemInfo(item, listItem) {
+    const contextMenu = document.createElement("div");
+    contextMenu.className = "context-menu";
+    contextMenu.textContent = item.name;
+    // Показываем окно с описанием предмета (название, слот и т.д.)
+    // alert(
+    //   `Название: ${item.name}\nСлот: ${
+    //     item.slot === -1 ? "Невозможно экипировать" : item.slot
+    //   }`
+    // );
+
+    // Проверяем, можно ли экипировать предмет
+    if (item.slot !== -1) {
+      const equipButton = document.createElement("div");
+      equipButton.className = "active-button";
+      if (this.player.equippedItems[item.slot])
+        equipButton.textContent = "Снять";
+      else equipButton.textContent = "Экипировать";
+
+      // Экипировка предмета
+      equipButton.addEventListener("click", () => {
+        console.log("экипировал");
+        this.player;
+        this.player.equipItem(item);
+
+        if (this.player.equippedItems[item.slot])
+          equipButton.textContent = "Снять";
+        else equipButton.textContent = "Экипировать";
+      });
+
+      contextMenu.appendChild(equipButton);
+    }
+    listItem.appendChild(contextMenu);
   }
 
   displayStats() {

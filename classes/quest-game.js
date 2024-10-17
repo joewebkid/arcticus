@@ -287,22 +287,31 @@ export class QuestGame {
    */
   shouldShowObject(object) {
     const { visitedSteps, inventory, encounteredCharacters } = this.player;
-    if (object.id == 19)
-      console.log(
-        object,
-        object.item,
-        inventory,
-        inventory.includes(object.item)
-      );
+    // if (object.id == 19)
+    //   console.log(
+    //     object,
+    //     object.item,
+    //     inventory,
+    //     inventory.includes(object.item)
+    //   );
+    const inventoryIds = inventory.map((item) => {
+      return item["name"];
+    });
+    console.log(
+      inventoryIds,
+      object.hideIfItem,
+      inventoryIds.includes(object.showIfItem)
+    );
     const conditions = {
       // once: this.selectedOptions.includes(object.id),
       once: visitedSteps.includes(object.id),
-      showIfItem: !inventory.includes(object.item),
-      hideIfItem: inventory.includes(object.item),
+      showIfItem: !inventoryIds.includes(object.showIfItem),
+      hideIfItem: inventoryIds.includes(object.hideIfItem),
       characters: new Set(object.characters).hasAll(encounteredCharacters),
       showIfStep: !new Set(visitedSteps).hasAll(object.showIfStep),
       hideIfStep: new Set(object.hideIfStep).hasAny(visitedSteps),
     };
+    // console.log(conditions);
     // console.log("conditions", conditions);
 
     for (const condition in conditions) {
@@ -310,7 +319,7 @@ export class QuestGame {
         return false;
       }
     }
-    if (object.id == 19) console.log(conditions);
+    // if (object.id == 19) console.log(conditions);
 
     return true;
   }

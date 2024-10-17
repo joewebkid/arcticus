@@ -575,7 +575,7 @@ li {
 }
 
 .inventory-item {
-  width: 54px;
+  width: 56px;
   height: 54px;
   background: #4b3620;
   line-height: 0;
@@ -591,9 +591,9 @@ li {
   /* background: linear-gradient(358deg, #62311a, #823c1a, #b85409); */
   box-shadow: 0px 5px 10px 2px rgb(0 0 0 / 64%) inset;
   position: relative;
-  opacity: 0.3;
+  /* opacity: 0.3; */
 }
-.inventory-item::before {
+/* .inventory-item::before {
   content: "";
   background: url(img/system/skin.png);
   position: absolute;
@@ -603,24 +603,44 @@ li {
   left: 0;
   opacity: 0.2;
   z-index: 0;
-}
-.inventory-item:hover {
+} */
+/* .inventory-item:hover {
   opacity: 0.9;
-}
+} */
 
 .inventory-item img {
   max-width: 100%;
   max-height: 100%;
 }
 .context-menu {
+  width: 148px;
+  height: 99px;
+  background: #3b2d1f;
   position: absolute;
-  background-color: #fff;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  border-radius: 5px;
-  padding: 10px;
-  z-index: 99990;
+  z-index: 3;
+  bottom: 62px;
+  left: 0;
+  border: 2px solid #d59232;
+  border-radius: 4px;
+  line-height: normal;
+  padding: 5px;
+  visibility: hidden;
+  opacity: 0;
+  transition: 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+.inventory-item:hover .context-menu {
+  visibility: visible;
+  opacity: 1;
 }
 
+.context-menu .active-button {
+  padding: 5px;
+  border: 2px solid #dbad6c;
+  margin-top: 4px;
+  border-radius: 4px;
+  cursor: pointer;
+  background: #d59232;
+}
 .context-menu-item {
   cursor: pointer;
   padding: 5px;
