@@ -132,12 +132,9 @@ export class GameUI {
       if (typeof this.player.inventory[i] !== "undefined") {
         const item = this.player.inventory[i];
         const image = document.createElement("img");
-        image.src = "./img/icons/" + item.img_key;
+        image.src = `./img/icons/${item.img_key}`;
         listItem.appendChild(image);
         this.createItemInfo(item, listItem);
-        // listItem.addEventListener("click", () =>
-        //   this.showItemInfo(item, listItem)
-        // );
       }
       this.inventoryList.appendChild(listItem);
     }
@@ -148,35 +145,45 @@ export class GameUI {
     const contextMenu = document.createElement("div");
     contextMenu.className = "context-menu";
     contextMenu.textContent = item.name;
-    // Показываем окно с описанием предмета (название, слот и т.д.)
-    // alert(
-    //   `Название: ${item.name}\nСлот: ${
-    //     item.slot === -1 ? "Невозможно экипировать" : item.slot
-    //   }`
-    // );
 
-    // Проверяем, можно ли экипировать предмет
     if (item.slot !== -1) {
       const equipButton = document.createElement("div");
       equipButton.className = "active-button";
-      if (this.player.equippedItems[item.slot])
-        equipButton.textContent = "Снять";
-      else equipButton.textContent = "Экипировать";
 
-      // Экипировка предмета
+      const bodySlot =
+        document.getElementsByClassName("item-body-slot")[item.slot];
+      const isEquipped = this.player.equippedItems[item.slot] === item.id;
+
+      equipButton.textContent = isEquipped ? "Снять" : "Экипировать";
+
+      // Обновляем слот экипировки
+      if (isEquipped) {
+        this.updateBodySlot(bodySlot, item.img_key);
+      }
+
+      // Экипировка/снятие предмета по клику
       equipButton.addEventListener("click", () => {
-        console.log("экипировал");
-        this.player;
         this.player.equipItem(item);
 
-        if (this.player.equippedItems[item.slot])
-          equipButton.textContent = "Снять";
-        else equipButton.textContent = "Экипировать";
+        const equipped = this.player.equippedItems[item.slot];
+        equipButton.textContent = equipped ? "Снять" : "Экипировать";
+
+        if (equipped) {
+          this.updateBodySlot(bodySlot, item.img_key);
+        } else {
+          bodySlot.innerHTML = "";
+        }
       });
 
       contextMenu.appendChild(equipButton);
     }
     listItem.appendChild(contextMenu);
+  }
+  updateBodySlot(slotElement, imgKey) {
+    slotElement.innerHTML = "";
+    const image = document.createElement("img");
+    image.src = `./img/icons/${imgKey}`;
+    slotElement.appendChild(image);
   }
 
   displayStats() {

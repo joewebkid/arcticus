@@ -58,8 +58,11 @@ export class Player {
 
   equipItem(item) {
     // this.equippedItems = {};
-    if (this.equippedItems[item.slot]) this.equippedItems[item.slot] = null;
-    else this.equippedItems[item.slot] = item.id;
+
+    const itemId = this.equippedItems[item.slot];
+    this.equippedItems[item.slot] = itemId ? null : item.id;
+    console.log(this.equippedItems);
+
     this.save();
   }
 
