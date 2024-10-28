@@ -14,6 +14,7 @@ export class Player {
       visitedSteps: [],
       encounteredCharacters: [],
       quests: [],
+      statuses: [],
       map: new Map("default_map_image.png"),
     };
 

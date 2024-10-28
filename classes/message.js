@@ -20,12 +20,19 @@ export class Message {
       hideIfStep: null,
       showIfStep: null,
       characters: null,
+      hideIfQuest: null,
+      showIfQuest: null,
+      hideIfStatus: null,
+      showIfStatus: null,
+      requirements: null,
+      hideIfItem: null,
+      showIfItem: null,
     };
-    
+
     Object.entries(defaultValues).forEach(([key, defaultValue]) => {
       this[key] = messageData?.[key] ?? defaultValue;
     });
-  }  
+  }
 
   /**
    * Отображает сообщение в окне чата.
@@ -57,7 +64,7 @@ export class Message {
     const authorClasses = {
       "Неизвестный голос": "right",
       "Системное сообщение": "system",
-      "Автор": "authorMessage",
+      Автор: "authorMessage",
     };
 
     if (authorClasses.hasOwnProperty(this.author)) {

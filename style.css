@@ -1140,6 +1140,14 @@ div#chatImg::before {
   position: relative;
   z-index: 1;
 }
+
+.quest-subquest {
+  margin-top: 10px;
+  padding: 6px;
+  border: 1px solid #a19d9d78;
+  background: #ffffff94;
+}
+
 #statsList {
   height: 49.6vh;
   padding: 89px 74px;
@@ -1243,7 +1251,7 @@ div#chatImg::before {
 .quest-item::after {
   content: "+";
   position: absolute;
-  top: 50%;
+  top: 20px;
   right: 10px;
   transform: translateY(-50%);
   font-size: 20px;

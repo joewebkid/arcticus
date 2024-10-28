@@ -41,9 +41,7 @@ export class GameUI {
 
     document
       .getElementById("resetQuestButton")
-      .addEventListener("click", () => {
-        this.resetQuest();
-      });
+      .addEventListener("click", () => this.resetQuest());
   }
 
   resetQuest() {
@@ -56,23 +54,30 @@ export class GameUI {
   }
 
   handleMenuClick(event) {
-    const target = event.target.id ? event.target : event.target.parentNode;
-    const buttonId = target.id;
+    const buttonId = event.target.closest(".medieval-button").id;
     const sectionName = this.getSectionName(buttonId);
 
     if (this.currentOpenSection === sectionName) {
-      document.getElementById(buttonId).classList.remove("active");
-      this.sections[sectionName].style.display = "none";
-      this.currentOpenSection = null;
+      this.toggleSection(buttonId, false);
     } else {
-      document
-        .querySelectorAll(".medieval-button")
-        .forEach((element) => element.classList.remove("active"));
+      this.toggleSection(buttonId, true);
+    }
+  }
+
+  toggleSection(buttonId, open) {
+    document
+      .querySelectorAll(".medieval-button")
+      .forEach((button) => button.classList.remove("active"));
+    this.closeAllSections();
+
+    if (open) {
       document.getElementById(buttonId).classList.add("active");
-      this.closeAllSections();
+      const sectionName = this.getSectionName(buttonId);
       this.sections[sectionName].style.display = "block";
       this.currentOpenSection = sectionName;
       this.displaySectionContent(sectionName);
+    } else {
+      this.currentOpenSection = null;
     }
   }
 
@@ -100,27 +105,14 @@ export class GameUI {
   }
 
   displaySectionContent(sectionName) {
-    switch (sectionName) {
-      case "inventory":
-        this.displayInventory();
-        break;
-      case "stats":
-        this.displayStats();
-        break;
-      case "quest":
-        this.displayQuest();
-        // this.sections.quest.style.display = 'block';
-        break;
-      case "map":
-        this.sections.map.style.display = "block";
-        break;
-      case "settings":
-        this.sections.settings.style.display = "block";
-        break;
-      // Add more cases if additional sections need specific display logic
-      default:
-        break;
-    }
+    const displayMethods = {
+      inventory: this.displayInventory.bind(this),
+      stats: this.displayStats.bind(this),
+      quest: this.displayQuest.bind(this),
+      map: () => (this.sections.map.style.display = "block"),
+      settings: () => (this.sections.settings.style.display = "block"),
+    };
+    displayMethods[sectionName]?.();
   }
 
   displayInventory() {
@@ -147,56 +139,53 @@ export class GameUI {
     contextMenu.textContent = item.name;
 
     if (item.slot !== -1) {
-      const equipButton = document.createElement("div");
-      equipButton.className = "active-button";
-
-      const bodySlot =
-        document.getElementsByClassName("item-body-slot")[item.slot];
-      const isEquipped = this.player.equippedItems[item.slot] === item.id;
-
-      equipButton.textContent = isEquipped ? "Снять" : "Экипировать";
-
-      // Обновляем слот экипировки
-      if (isEquipped) {
-        this.updateBodySlot(bodySlot, item.img_key);
-      }
-
-      // Экипировка/снятие предмета по клику
-      equipButton.addEventListener("click", () => {
-        this.player.equipItem(item);
-
-        const equipped = this.player.equippedItems[item.slot];
-        equipButton.textContent = equipped ? "Снять" : "Экипировать";
-
-        if (equipped) {
-          this.updateBodySlot(bodySlot, item.img_key);
-        } else {
-          bodySlot.innerHTML = "";
-        }
-      });
-
+      const equipButton = this.createEquipButton(item);
       contextMenu.appendChild(equipButton);
     }
     listItem.appendChild(contextMenu);
   }
+
+  createEquipButton(item) {
+    const equipButton = document.createElement("div");
+    equipButton.className = "active-button";
+
+    const bodySlot =
+      document.getElementsByClassName("item-body-slot")[item.slot];
+    const isEquipped = this.player.equippedItems[item.slot] === item.id;
+
+    equipButton.textContent = isEquipped ? "Снять" : "Экипировать";
+    if (isEquipped) this.updateBodySlot(bodySlot, item.img_key);
+
+    equipButton.addEventListener("click", () => {
+      this.player.equipItem(item);
+      const equipped = this.player.equippedItems[item.slot];
+      equipButton.textContent = equipped ? "Снять" : "Экипировать";
+      this.updateBodySlot(bodySlot, equipped ? item.img_key : null);
+    });
+
+    return equipButton;
+  }
+
   updateBodySlot(slotElement, imgKey) {
     slotElement.innerHTML = "";
-    const image = document.createElement("img");
-    image.src = `./img/icons/${imgKey}`;
-    slotElement.appendChild(image);
+    if (imgKey) {
+      const image = document.createElement("img");
+      image.src = `./img/icons/${imgKey}`;
+      slotElement.appendChild(image);
+    }
   }
 
   displayStats() {
     this.statsList.innerHTML = "";
-    const stats = this.player.stats;
-    Object.keys(stats).forEach((stat) => {
-      if (stat in this.labels) {
+    Object.entries(this.player.stats).forEach(([stat, value]) => {
+      if (this.labels[stat]) {
         const listItem = document.createElement("li");
-        listItem.textContent = `${this.labels[stat]}: ${stats[stat]}`;
+        listItem.textContent = `${this.labels[stat]}: ${value}`;
         this.statsList.appendChild(listItem);
       }
     });
   }
+
   handleQuestClick(event) {
     const questItem = event.target.closest(".quest-item");
     if (questItem) {
@@ -235,7 +224,6 @@ export class GameUI {
   }
 
   displayQuest() {
-    console.log(this.player.quests);
     this.questsList.innerHTML = "";
     this.player.quests.forEach((quest) => {
       const listQuestItem = document.createElement("div");
@@ -251,6 +239,13 @@ export class GameUI {
       questDescription.className = "quest-description";
       questDescription.innerHTML = quest.description;
       listQuestItem.appendChild(questDescription);
+
+      quest.subQuest?.forEach((subquestElem) => {
+        const subQuest = document.createElement("div");
+        subQuest.className = "quest-subquest";
+        subQuest.innerHTML = `<span>□ ${subquestElem.name}</span><hr><p>${subquestElem.description}</p>`;
+        questDescription.appendChild(subQuest);
+      });
 
       this.questsList.appendChild(listQuestItem);
     });

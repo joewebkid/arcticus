@@ -174,6 +174,7 @@ export class QuestGame {
     if (this.currentMessageIndex < this.messages.length) {
       const message = this.messages[this.currentMessageIndex];
 
+      console.log(this.shouldShowObject(message));
       if (!this.shouldShowObject(message)) {
         this.currentMessageIndex++;
         this.showNextMessage();
@@ -286,30 +287,33 @@ export class QuestGame {
    * @TODO Перенести в класс Object от которого будут наследоваться Options и Messages
    */
   shouldShowObject(object) {
-    const { visitedSteps, inventory, encounteredCharacters } = this.player;
-    // if (object.id == 19)
-    //   console.log(
-    //     object,
-    //     object.item,
-    //     inventory,
-    //     inventory.includes(object.item)
-    //   );
-    const inventoryIds = inventory.map((item) => {
-      return item["name"];
-    });
-    console.log(
-      inventoryIds,
-      object.hideIfItem,
-      inventoryIds.includes(object.showIfItem)
+    const { visitedSteps, inventory, encounteredCharacters, quests, statuses } =
+      this.player;
+    console.log(object);
+    // Получаем идентификаторы из инвентаря
+    const inventoryIds = inventory.map((item) => item["name"]);
+
+    // Получаем идентификаторы квестов и статусов
+    let questIds = quests.map((quest) => quest.id);
+    const subQuestIds = quests.flatMap((quest) =>
+      quest.subQuest.map((subQuest) => subQuest.id)
     );
+    questIds = questIds.concat(subQuestIds);
+
+    // const statusIds = statuses.map((status) => status.id);
+
     const conditions = {
-      // once: this.selectedOptions.includes(object.id),
       once: visitedSteps.includes(object.id),
       showIfItem: !inventoryIds.includes(object.showIfItem),
       hideIfItem: inventoryIds.includes(object.hideIfItem),
       characters: new Set(object.characters).hasAll(encounteredCharacters),
       showIfStep: !new Set(visitedSteps).hasAll(object.showIfStep),
       hideIfStep: new Set(object.hideIfStep).hasAny(visitedSteps),
+
+      showIfQuest: !questIds.includes(object.showIfQuest),
+      hideIfQuest: questIds.includes(object.hideIfQuest),
+      showIfStatus: !statuses.includes(object.showIfStatus),
+      hideIfStatus: statuses.includes(object.hideIfStatus),
     };
     // console.log(conditions);
     // console.log("conditions", conditions);
@@ -365,68 +369,72 @@ export class QuestGame {
   executeSelectedOption(option, status = true) {
     this.selectedOptions.push(option.id);
 
-    const opt_result = status ? option.result : option.failure;
+    const optResult = status ? option.result : option.failure;
 
     if (option.nextStep) {
       this.executeStep(option.nextStep);
-    } else if (opt_result) {
-      const { messages, options, item, image, choose_class, quest } =
-        opt_result;
-      this.currentMessageIndex = 0;
-
-      if (image) {
-        this.updateLocationImage(image);
-      }
-
-      if (options) {
-        this.options = options.map((optionData) => new Option(optionData));
-      }
-
-      if (messages) {
-        this.messages = messages.map((messageData) => new Message(messageData));
-        this.showNextMessage();
-      }
-
-      if (choose_class) {
-        this.player.class = choose_class;
-      }
-
-      if (quest) {
-        let alreadyIsset = this.player.quests.filter(function (v) {
-          return v["id"] == quest.id;
-        })[0];
-
-        if (alreadyIsset) {
-          const itemToReplace = this.player.quests.find((item) => {
-            console.log(item, item.id === quest.id, quest);
-            if (item.id === quest.id) {
-              item.description += "<br>" + quest.description;
-              return true;
-            }
-          });
-        } else this.player.quests.push(quest);
-        this.messages.push(
-          new Message({
-            author: "Система",
-            content: `Новая задача: ${quest.name}`,
-          })
-        );
-      }
-
-      if (item) {
-        this.player.inventory.push(item);
-        this.messages.push(
-          new Message({
-            author: "Система",
-            content: `Получен предмет: ${item.name}`,
-          })
-        );
-      }
-
-      this.updatePlayerState(option);
-      this.updateOptions();
-      this.player.save();
+      return;
     }
+
+    if (!optResult) return;
+    const { messages, options, item, image, choose_class, quest } = optResult;
+    this.currentMessageIndex = 0;
+
+    if (image) this.updateLocationImage(image);
+    if (options)
+      this.options = options.map((optionData) => new Option(optionData));
+
+    if (messages) {
+      this.messages = messages.map((messageData) => new Message(messageData));
+      this.showNextMessage();
+    }
+
+    if (choose_class) this.player.class = choose_class;
+
+    if (quest) this.handleQuest(quest);
+
+    if (item) this.handleNewItem(item);
+
+    this.updatePlayerState(option);
+    this.updateOptions();
+    this.player.save();
+  }
+
+  // Вспомогательный метод для обработки нового квеста
+  handleQuest(quest) {
+    const existingQuest = this.player.quests.find((v) => v.id === quest.id);
+
+    if (existingQuest) {
+      existingQuest.subQuest = existingQuest.subQuest || [];
+      if (quest.subQuest) existingQuest.subQuest.push(quest.subQuest);
+      else existingQuest.description += `<br>${quest.description}`;
+
+      this.messages.push(
+        new Message({
+          author: "Система",
+          content: `Задача обновлена: ${existingQuest.name}`,
+        })
+      );
+    } else {
+      this.player.quests.push(quest);
+      this.messages.push(
+        new Message({
+          author: "Система",
+          content: `Новая задача: ${quest.name}`,
+        })
+      );
+    }
+  }
+
+  // Вспомогательный метод для обработки нового предмета
+  handleNewItem(item) {
+    this.player.inventory.push(item);
+    this.messages.push(
+      new Message({
+        author: "Система",
+        content: `Получен предмет: ${item.name}`,
+      })
+    );
   }
 
   /**
