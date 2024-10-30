@@ -838,8 +838,8 @@ li {
   background: #ffffef;
   border-radius: 9px;
   box-shadow: 0 0 27px 0 #ffffff;
-  outline: 2px solid #51372e;
-  border: 2px solid #5f5442;
+  outline: 2px solid #9e9e9e;
+  border: 2px solid #918181;
 }
 #dice {
   position: absolute;
@@ -862,7 +862,7 @@ li {
   z-index: 1;
   background-image: url("triangle.png");
   background-size: 100% 100%;
-  filter: sepia(1);
+  filter: sepia(1) hue-rotate(175deg) brightness(1.3);
 }
 #dice-text {
   display: flex;
@@ -879,7 +879,7 @@ li {
 }
 #difficult_level {
   border-radius: 14px;
-  background: #5a503e;
+  background: #6d7177;
   color: #ffffff;
   width: 46px;
   height: 30px;
@@ -887,7 +887,7 @@ li {
   margin-top: -200px;
   z-index: 9999;
   box-shadow: 0 0 16px 0 #517ac3;
-  border: 3px solid #50352e;
+  border: 3px solid #999999;
   display: flex;
   justify-content: center;
   font-size: 18px;
@@ -898,14 +898,15 @@ li {
   position: absolute;
   top: -46px;
   width: 160px;
-  background: #5a503e;
+  background: #6d7177;
   color: #ffffff;
   padding: 6px 10px 20px;
   z-index: -1;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
-  border: 2px solid #000000eb;
-  border: 4px solid #5f5442;
+  /* border: 2px solid #000000eb;
+  border: 4px solid #5f5442; */
+  border: 3px solid #9e9e9e;
   border-bottom: 0;
 }
 #difficult_level.success {

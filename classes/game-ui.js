@@ -225,6 +225,8 @@ export class GameUI {
 
   displayQuest() {
     this.questsList.innerHTML = "";
+    const fragment = document.createDocumentFragment();
+
     this.player.quests.forEach((quest) => {
       const listQuestItem = document.createElement("div");
       listQuestItem.className = "quest-item";
@@ -247,7 +249,8 @@ export class GameUI {
         questDescription.appendChild(subQuest);
       });
 
-      this.questsList.appendChild(listQuestItem);
+      fragment.appendChild(listQuestItem);
     });
+    this.questsList.appendChild(fragment);
   }
 }
