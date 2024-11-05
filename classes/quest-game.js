@@ -296,7 +296,7 @@ export class QuestGame {
     // Получаем идентификаторы квестов и статусов
     let questIds = quests.map((quest) => quest.id);
     const subQuestIds = quests.flatMap((quest) =>
-      quest.subQuest.map((subQuest) => subQuest.id)
+      quest.subQuest ? quest.subQuest.map((subQuest) => subQuest.id) : []
     );
     questIds = questIds.concat(subQuestIds);
 

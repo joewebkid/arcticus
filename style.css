@@ -609,8 +609,8 @@ li {
 } */
 
 .inventory-item img {
-  max-width: 100%;
-  max-height: 100%;
+  width: 100%;
+  height: 100%;
 }
 .context-menu {
   width: 148px;
@@ -1105,23 +1105,54 @@ div#chatImg::before {
 }
 .item-body-slot.slot0 {
   top: 9vh;
-  left: 10vw;
+  left: 26%;
 }
+.item-body-slot:before {
+  content: "";
+  position: absolute;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 80%;
+  width: 100%;
+  height: 100%;
+  filter: opacity(0.5) grayscale(1) saturate(0.5) drop-shadow(2px 4px 6px white);
+}
+.item-body-slot.slot0:before {
+  background-image: url("./img/icons/interface/Iron Helmet.png");
+}
+.item-body-slot.slot1:before {
+  background-image: url("./img/icons/interface/Wooden Armor.png");
+}
+.item-body-slot.slot2:before {
+  background-image: url("./img/icons/interface/Golden Sword.png");
+}
+.item-body-slot.slot3:before {
+  background-image: url("./img/icons/interface/Leather Boot.png");
+}
+.item-body-slot.slot4:before {
+  background-image: url("./img/icons/interface/Wooden Shield.png");
+}
+
 .item-body-slot.slot1 {
   top: 18vh;
-  left: 10vw;
+  left: 26%;
 }
 .item-body-slot.slot2 {
   top: 26vh;
-  left: 14vw;
+  left: 16%;
 }
 .item-body-slot.slot3 {
   top: 38vh;
-  left: 9vw;
+  left: 23%;
+}
+.item-body-slot.slot4 {
+  top: 26vh;
+  left: 34%;
 }
 .item-body-slot img {
   width: 100%;
   height: 100%;
+  position: relative;
 }
 
 #mapContainer {
