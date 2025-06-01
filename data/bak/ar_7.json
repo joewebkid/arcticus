@@ -1,0 +1,26 @@
+{
+  "id": 7,
+  "location": {
+    "image": "ar1/ar5_smithy.jpg" 
+  },
+
+  "messages": [
+    {
+      "author": "Капитан",
+      "content": "Ну, что зашил броню?"
+    }
+  ], 
+  "options": [
+    
+    {
+      "id": 14,
+      "text": "Да", 
+      "nextStep": 3
+    },
+    {
+      "id": 15,
+      "text": "Нет", 
+      "nextStep": 3
+    }
+  ]
+}
